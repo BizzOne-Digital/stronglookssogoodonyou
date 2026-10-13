@@ -1,0 +1,33 @@
+import { NextResponse } from "next/server";
+import { prepareDb } from "@/lib/prepare-db";
+import { StoredUpload } from "@/models/StoredUpload";
+import { isUploadFolder, sanitizeUploadFilename } from "@/lib/stored-uploads";
+
+export async function GET(
+  _req: Request,
+  context: { params: Promise<{ folder: string; filename: string }> }
+) {
+  const { folder, filename } = await context.params;
+
+  if (!isUploadFolder(folder) || !sanitizeUploadFilename(filename)) {
+    return new NextResponse("Not found", { status: 404 });
+  }
+
+  await prepareDb();
+  const doc = await StoredUpload.findOne({ folder, filename }).lean();
+  if (!doc?.data) {
+    return new NextResponse("Not found", { status: 404 });
+  }
+
+  const buf = Buffer.from(doc.data as unknown as Uint8Array);
+  const body = new Uint8Array(buf);
+
+  return new NextResponse(body, {
+    status: 200,
+    headers: {
+      "Content-Type": doc.mimeType,
+      "Content-Length": String(doc.size),
+      "Cache-Control": "public, max-age=31536000, immutable",
+    },
+  });
+}

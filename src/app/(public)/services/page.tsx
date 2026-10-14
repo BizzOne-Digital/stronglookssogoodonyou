@@ -57,7 +57,8 @@ export default async function ServicesPage() {
                     src={pkgImage.src}
                     alt={pkgImage.alt}
                     presentation={pkgImage.presentation}
-                    className="md:max-h-[min(70vh,520px)]"
+                    className="w-full"
+                    sizes="(max-width:768px) 100vw, 50vw"
                   />
                 </div>
                 <div className="md:col-span-12">

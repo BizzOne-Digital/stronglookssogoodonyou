@@ -10,7 +10,7 @@ const PRESENTATION: Record<
     aspect: "aspect-[3/4]",
     frame: "overflow-hidden bg-power-black",
     image:
-      "object-cover object-[center_55%] transition-transform duration-500 group-hover:scale-[1.03]",
+      "object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]",
   },
   personal: {
     aspect: "aspect-[4/5]",

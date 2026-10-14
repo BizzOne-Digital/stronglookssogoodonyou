@@ -14,8 +14,9 @@ export function HomeHeroImage() {
       alt="Modern strength gym with pink accent lighting"
       fill
       priority
-      className="object-cover object-[55%_center] md:object-[68%_center]"
+      className="object-cover object-center md:object-[62%_center]"
       sizes="100vw"
+      quality={92}
       onError={() => {
         if (src === HERO_GYM_IMAGE) setSrc(PLACEHOLDER_IMAGES.hero);
       }}

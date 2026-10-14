@@ -77,7 +77,14 @@ export function GalleryGrid({ images }: { images: GalleryImage[] }) {
               className={`group relative w-full ${aspect} ${frame} focus-visible:outline focus-visible:outline-2 focus-visible:outline-hot-fuchsia`}
               onClick={() => setActive(idx)}
             >
-              <Image src={img.src} alt={img.alt} fill className={image} sizes="(max-width:768px) 100vw, 33vw" />
+              <Image
+                src={img.src}
+                alt={img.alt}
+                fill
+                className={image}
+                sizes="(max-width:768px) 100vw, 33vw"
+                quality={90}
+              />
             </button>
           );
         })}
@@ -115,6 +122,7 @@ export function GalleryGrid({ images }: { images: GalleryImage[] }) {
                   ).image
                 }
                 sizes="90vw"
+                quality={92}
               />
             </div>
             {filtered[active].caption && (

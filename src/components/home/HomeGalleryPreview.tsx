@@ -8,7 +8,7 @@ import {
 } from "@/lib/image-presentations";
 
 function PreviewTile({ img }: { img: PublicGalleryImage }) {
-  const kind = categoryToPresentation(img.category);
+  const kind = img.presentation ?? categoryToPresentation(img.category);
   const { aspect, frame, image } = presentationClasses(kind);
 
   return (
@@ -22,6 +22,7 @@ function PreviewTile({ img }: { img: PublicGalleryImage }) {
         fill
         className={image}
         sizes="(max-width:768px) 50vw, 33vw"
+        quality={90}
       />
       {img.caption && (
         <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-power-black/80 to-transparent p-3 pt-8 text-xs uppercase tracking-widest text-clean-white opacity-0 transition-opacity group-hover:opacity-100">
@@ -34,7 +35,15 @@ function PreviewTile({ img }: { img: PublicGalleryImage }) {
 
 export function HomeGalleryPreview({ images }: { images: PublicGalleryImage[] }) {
   const personal = images.filter((i) => i.category !== "Competition");
-  const competition = images.filter((i) => i.category === "Competition");
+  const seenCompetitionSrc = new Set<string>();
+  const competition = images
+    .filter((i) => i.category === "Competition")
+    .filter((i) => {
+      if (seenCompetitionSrc.has(i.src)) return false;
+      seenCompetitionSrc.add(i.src);
+      return true;
+    })
+    .slice(0, 2);
 
   return (
     <section className="bg-clean-white py-20 text-power-black md:py-28">
@@ -68,7 +77,7 @@ export function HomeGalleryPreview({ images }: { images: PublicGalleryImage[] })
         {competition.length > 0 && (
           <div className="mt-10">
             <p className="font-display text-xs tracking-[0.35em] text-power-black/50">COMPETITION</p>
-            <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-2 md:gap-4">
+            <div className="mt-4 grid grid-cols-2 gap-3 md:gap-4">
               {competition.map((img) => (
                 <PreviewTile key={img.id} img={img} />
               ))}

@@ -20,14 +20,14 @@ export const PACKAGE_IMAGES_BY_SLUG: Record<string, PackageImage> = {
     presentation: "ambient",
   },
   "lifestyle-transformation": {
-    src: "/images/packages/lifestyle-transformation.png",
+    src: "/images/gallery/10-competition-lineup.jpg",
     alt: "Joanna Michel on stage at an IFBB professional league event in Toronto",
-    presentation: "competition",
+    presentation: "ambient",
   },
   "bodybuilding-competition-prep": {
-    src: "/images/packages/bodybuilding-competition-prep.png",
-    alt: "Joanna Michel posing on stage at a natural bodybuilding championship",
-    presentation: "competition",
+    src: "/images/packages/bodybuilding-competition-prep.jpg",
+    alt: "Joanna Michel posing on stage at the canfitpro natural championship",
+    presentation: "ambient",
   },
 };
 

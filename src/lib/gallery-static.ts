@@ -37,6 +37,22 @@ export const STATIC_GALLERY_IMAGES: GalleryImage[] = [
     presentation: "competition",
   },
   {
+    id: "static-12",
+    src: `${base}/12-competition-natural-canada-lineup.jpg`,
+    alt: "Joanna Michel with competitors on stage at the Natural Canada IFBB Pro League",
+    category: "Competition",
+    caption: "Natural Canada IFBB Pro League",
+    presentation: "ambient",
+  },
+  {
+    id: "static-13",
+    src: `${base}/13-competition-canfitpro-stage.jpg`,
+    alt: "Joanna Michel posing on stage at the canfitpro natural championship",
+    category: "Competition",
+    caption: "canfitpro natural championship",
+    presentation: "ambient",
+  },
+  {
     id: "static-04",
     src: `${base}/04-portraits-editorial.png`,
     alt: "Joanna Michel editorial fitness portrait",
@@ -87,12 +103,26 @@ export const STATIC_GALLERY_IMAGES: GalleryImage[] = [
 ];
 
 const HOME_PREVIEW_PERSONAL = ["static-06", "static-04", "static-08", "static-09"] as const;
-const HOME_PREVIEW_COMPETITION = ["static-11", "static-03"] as const;
+const HOME_PREVIEW_COMPETITION = ["static-12", "static-13"] as const;
 
 export const HOME_GALLERY_PREVIEW = [
   ...HOME_PREVIEW_PERSONAL,
   ...HOME_PREVIEW_COMPETITION,
 ].map((id) => STATIC_GALLERY_IMAGES.find((img) => img.id === id)!);
+
+export function getHomeCompetitionGalleryPreview() {
+  return HOME_PREVIEW_COMPETITION.map((id) => {
+    const img = STATIC_GALLERY_IMAGES.find((i) => i.id === id)!;
+    return {
+      id: img.id,
+      src: img.src,
+      alt: img.alt,
+      caption: img.caption,
+      category: img.category,
+      presentation: img.presentation,
+    };
+  });
+}
 
 export const GALLERY_CATEGORY_ORDER = [
   "Competition",

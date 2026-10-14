@@ -6,7 +6,20 @@ export const metadata = {
   robots: { index: false, follow: true },
 };
 
-export default function IntroPage() {
+/** searchParams is dynamic — avoid blocking static prerender (Next.js PPR). */
+export const instant = false;
+
+type Props = {
+  searchParams: Promise<{ next?: string }>;
+};
+
+async function IntroPageInner({ searchParams }: Props) {
+  const { next } = await searchParams;
+  const nextPath = next?.startsWith("/") ? next : "/";
+  return <IntroExperience nextPath={nextPath} />;
+}
+
+export default function IntroPage({ searchParams }: Props) {
   return (
     <Suspense
       fallback={
@@ -15,7 +28,7 @@ export default function IntroPage() {
         </div>
       }
     >
-      <IntroExperience />
+      <IntroPageInner searchParams={searchParams} />
     </Suspense>
   );
 }

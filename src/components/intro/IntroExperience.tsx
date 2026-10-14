@@ -1,52 +1,52 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useState } from "react";
-import { LOGO_IMAGE } from "@/lib/hero-assets";
-import { BRAND } from "@/lib/constants";
-import { INTRO_SESSION_KEY, INTRO_SOUNDTRACK } from "@/lib/intro-audio";
+import { useRouter } from "next/navigation";
+import { startTransition, useCallback, useEffect, useRef, useState } from "react";
+import { hasPassedIntroClient, markIntroComplete } from "@/lib/intro-complete";
 import { useIntroMusic } from "@/components/intro/IntroMusicProvider";
+import { BrandWordmark } from "@/components/brand/BrandWordmark";
 
-export function IntroExperience() {
+export function IntroExperience({ nextPath }: { nextPath: string }) {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const nextPath = searchParams.get("next") || "/";
-  const { startIntroMusic, stopIntroMusic } = useIntroMusic();
+  const { startIntroMusic, isMusicReady, hasAudioSource } = useIntroMusic();
+  const leavingRef = useRef(false);
+  const [leaving, setLeaving] = useState(false);
 
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const enterSite = useCallback(
-    (playMusic: boolean) => {
-      try {
-        sessionStorage.setItem(INTRO_SESSION_KEY, "1");
-      } catch {
-        /* ignore */
-      }
-      router.replace(nextPath.startsWith("/") ? nextPath : "/");
-    },
-    [nextPath, router]
-  );
+  useEffect(() => {
+    if (!hasPassedIntroClient()) return;
+    const path = nextPath.startsWith("/") ? nextPath : "/";
+    router.replace(path);
+  }, [nextPath, router]);
+
+  const enterSite = useCallback(() => {
+    if (leavingRef.current) return;
+    leavingRef.current = true;
+    setLeaving(true);
+    markIntroComplete();
+    const path = nextPath.startsWith("/") ? nextPath : "/";
+    startTransition(() => {
+      router.replace(path);
+    });
+  }, [nextPath, router]);
 
   const handleEnterToSite = async () => {
+    if (leavingRef.current) return;
     setError(null);
     setBusy(true);
-    const started = await startIntroMusic();
-    if (!started) {
-      setError(
-        "Music could not start yet. Wait a moment and try again, or skip to enter without sound."
-      );
-      setBusy(false);
-      return;
+    if (hasAudioSource) {
+      const started = await startIntroMusic();
+      if (!started) {
+        setError("Could not start the intro track. Tap Enter to site again.");
+        setBusy(false);
+        leavingRef.current = false;
+        setLeaving(false);
+        return;
+      }
     }
-    enterSite(true);
-  };
-
-  const handleSkip = () => {
-    stopIntroMusic();
-    enterSite(false);
+    enterSite();
   };
 
   return (
@@ -56,28 +56,19 @@ export function IntroExperience() {
         aria-hidden
       />
 
-      <div className="relative z-10 flex max-w-md flex-col items-center">
-        <Image
-          src={LOGO_IMAGE}
-          alt=""
-          width={96}
-          height={96}
-          className="h-24 w-24 object-contain"
-          priority
-        />
-        <p className="mt-8 font-display text-xs tracking-[0.45em] text-hot-fuchsia">WELCOME</p>
-        <h1 className="mt-4 font-display text-2xl uppercase leading-tight tracking-tight md:text-3xl">
-          {BRAND.shortName}
-        </h1>
-        <p className="mt-4 text-sm leading-relaxed text-soft-silver">
-          Tap <span className="text-clean-white">Enter to site</span> to hear{" "}
-          <span className="text-clean-white">You&apos;ve Got The Love</span> (from 0:34) while you
-          browse the site.
-        </p>
+      <div className="relative z-10 flex max-w-lg flex-col items-center">
+        <BrandWordmark priority className="max-w-[min(100%,20rem)] md:max-w-sm" />
+        <p className="mt-10 font-display text-xs tracking-[0.45em] text-hot-fuchsia">WELCOME</p>
+
+        {!isMusicReady && (
+          <p className="mt-8 text-xs uppercase tracking-[0.25em] text-soft-silver">
+            Preparing music…
+          </p>
+        )}
 
         <button
           type="button"
-          disabled={busy}
+          disabled={busy || leaving || !isMusicReady}
           onClick={handleEnterToSite}
           className="mt-10 w-full max-w-xs bg-hot-fuchsia px-8 py-4 font-body text-[0.7rem] font-bold uppercase tracking-[0.2em] text-power-black transition-colors hover:bg-[#ff3da8] btn-press disabled:opacity-60"
         >
@@ -85,24 +76,6 @@ export function IntroExperience() {
         </button>
 
         {error && <p className="mt-6 text-sm text-soft-silver">{error}</p>}
-
-        <div className="mt-8 flex flex-col gap-3 text-xs text-soft-silver">
-          <button
-            type="button"
-            onClick={handleSkip}
-            className="uppercase tracking-[0.2em] text-clean-white/80 underline-offset-4 hover:text-hot-fuchsia hover:underline"
-          >
-            Enter without music
-          </button>
-          <Link
-            href={INTRO_SOUNDTRACK.spotifyUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-soft-silver/90 hover:text-hot-fuchsia"
-          >
-            Open track on Spotify
-          </Link>
-        </div>
       </div>
     </div>
   );

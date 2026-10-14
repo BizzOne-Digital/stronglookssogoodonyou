@@ -120,7 +120,7 @@ export function HomePageContent({
                   alt={pkgImage.alt}
                   presentation={pkgImage.presentation}
                   sizes="(max-width:768px) 85vw, 420px"
-                  className="shrink-0"
+                  className="w-full shrink-0"
                 />
                 <div className="flex flex-1 flex-col p-5 sm:p-6">
                 <h3 className="font-display text-2xl uppercase leading-tight">{svc.name}</h3>

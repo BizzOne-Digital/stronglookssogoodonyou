@@ -11,7 +11,9 @@ import { MediaAsset } from "@/models/MediaAsset";
 import { formatCadFromCents } from "@/lib/format";
 import { resolvePublicImageSrcOrEmpty } from "@/lib/image-url";
 import type { IService } from "@/models/Service";
+import type { PresentationKind } from "@/lib/image-presentations";
 import {
+  getHomeCompetitionGalleryPreview,
   HOME_GALLERY_PREVIEW,
   STATIC_GALLERY_IMAGES,
   sortGalleryImages,
@@ -24,6 +26,7 @@ export type PublicGalleryImage = {
   caption?: string;
   category: string;
   order?: number;
+  presentation?: PresentationKind;
 };
 
 export async function getSiteSettings() {
@@ -170,7 +173,13 @@ export async function getPublicGalleryImages(): Promise<PublicGalleryImage[]> {
   }));
 }
 
+function homeCompetitionPreviewStatic(): PublicGalleryImage[] {
+  return getHomeCompetitionGalleryPreview();
+}
+
 export async function getHomeGalleryPreviewImages(): Promise<PublicGalleryImage[]> {
+  const competition = homeCompetitionPreviewStatic();
+
   try {
     await prepareDb();
     const all = mapDbGalleryToImages(
@@ -179,8 +188,7 @@ export async function getHomeGalleryPreviewImages(): Promise<PublicGalleryImage[
     if (all.length > 0) {
       const sorted = sortGalleryImages(all);
       const personal = sorted.filter((i) => i.category !== "Competition");
-      const competition = sorted.filter((i) => i.category === "Competition");
-      return [...personal.slice(0, 4), ...competition.slice(0, 2)].slice(0, 6);
+      return [...personal.slice(0, 4), ...competition].slice(0, 6);
     }
   } catch {
     // fall through
@@ -191,6 +199,7 @@ export async function getHomeGalleryPreviewImages(): Promise<PublicGalleryImage[
     alt: img.alt,
     caption: img.caption,
     category: img.category,
+    presentation: img.presentation,
   }));
 }
 

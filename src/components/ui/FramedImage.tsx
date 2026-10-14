@@ -11,6 +11,7 @@ type Props = {
   priority?: boolean;
   sizes?: string;
   className?: string;
+  quality?: number;
 };
 
 export function FramedImage({
@@ -20,6 +21,7 @@ export function FramedImage({
   priority,
   sizes = "(max-width:768px) 100vw, 50vw",
   className = "",
+  quality = 90,
 }: Props) {
   const { aspect, frame, image } = presentationClasses(presentation);
 
@@ -31,6 +33,7 @@ export function FramedImage({
         fill
         priority={priority}
         sizes={sizes}
+        quality={quality}
         className={image}
       />
     </div>

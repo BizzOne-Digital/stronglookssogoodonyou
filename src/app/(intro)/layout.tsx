@@ -1,5 +1,7 @@
 import { JsonLd } from "@/components/seo/JsonLd";
 
+export const instant = false;
+
 export default function IntroLayout({ children }: { children: React.ReactNode }) {
   return (
     <>

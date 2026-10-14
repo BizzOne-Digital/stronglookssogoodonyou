@@ -8,56 +8,27 @@ import {
   useRef,
   useState,
 } from "react";
-import { INTRO_SOUNDTRACK } from "@/lib/intro-audio";
+import {
+  getIntroAudioSrc,
+  getIntroPlaybackBounds,
+  getIntroYoutubeVideoId,
+  introLocalAudioAvailable,
+  introSegmentShouldRestart,
+  INTRO_SOUNDTRACK,
+} from "@/lib/intro-audio";
+import {
+  loadYouTubeIframeApi,
+  type YouTubePlayerInstance,
+} from "@/lib/youtube-iframe-api";
 
-type SpotifyEmbedController = {
-  play: () => void;
-  pause: () => void;
-  seek: (ms: number) => void;
-  addListener: (
-    event: string,
-    cb: (payload: { data?: { position?: number } }) => void
-  ) => void;
-};
-
-type SpotifyIFrameApi = {
-  createController: (
-    el: HTMLElement,
-    options: { uri: string; width: string; height: string },
-    cb: (controller: SpotifyEmbedController) => void
-  ) => void;
-};
-
-declare global {
-  interface Window {
-    onSpotifyIframeApiReady?: (api: SpotifyIFrameApi) => void;
-  }
-}
-
-let spotifyApiPromise: Promise<SpotifyIFrameApi> | null = null;
-
-function loadSpotifyIframeApi(): Promise<SpotifyIFrameApi> {
-  if (spotifyApiPromise) return spotifyApiPromise;
-
-  spotifyApiPromise = new Promise((resolve) => {
-    window.onSpotifyIframeApiReady = (api) => resolve(api);
-
-    if (!document.querySelector('script[data-spotify-iframe-api]')) {
-      const script = document.createElement("script");
-      script.src = "https://open.spotify.com/embed/iframe-api/v1";
-      script.async = true;
-      script.dataset.spotifyIframeApi = "true";
-      document.body.appendChild(script);
-    }
-  });
-
-  return spotifyApiPromise;
-}
+type PlaybackMode = "audio" | "youtube" | "none";
 
 type IntroMusicContextValue = {
   startIntroMusic: () => Promise<boolean>;
   stopIntroMusic: () => void;
   isPlaying: boolean;
+  isMusicReady: boolean;
+  hasAudioSource: boolean;
 };
 
 const IntroMusicContext = createContext<IntroMusicContextValue | null>(null);
@@ -70,146 +41,268 @@ export function useIntroMusic() {
   return ctx;
 }
 
+function seekAudioToIntroStart(audio: HTMLAudioElement) {
+  const bounds = getIntroPlaybackBounds(
+    Number.isFinite(audio.duration) ? audio.duration : undefined
+  );
+  audio.currentTime = bounds.start;
+}
+
+function startYouTubeIntro(player: YouTubePlayerInstance) {
+  const { startSeconds } = INTRO_SOUNDTRACK;
+  player.unMute();
+  player.setVolume(70);
+  player.seekTo(startSeconds, true);
+  player.playVideo();
+}
+
 export function IntroMusicProvider({ children }: { children: React.ReactNode }) {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [localClipReady, setLocalClipReady] = useState(false);
+  const [isMusicReady, setIsMusicReady] = useState(false);
+  const [hasAudioSource, setHasAudioSource] = useState(false);
+  const [usesYouTube, setUsesYouTube] = useState(false);
 
+  const modeRef = useRef<PlaybackMode>("none");
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const spotifyRef = useRef<SpotifyEmbedController | null>(null);
-  const spotifyReadyRef = useRef(false);
-  const embedHostRef = useRef<HTMLDivElement>(null);
+  const ytPlayerRef = useRef<YouTubePlayerInstance | null>(null);
+  const ytHostRef = useRef<HTMLDivElement>(null);
+  const syncStartRef = useRef(true);
+  const segmentGuardRef = useRef<number | null>(null);
+  const segmentLoopRef = useRef<number | null>(null);
+
+  const stopYouTubeSegmentLoop = useCallback(() => {
+    window.clearInterval(segmentLoopRef.current ?? undefined);
+    segmentLoopRef.current = null;
+  }, []);
+
+  const startYouTubeSegmentLoop = useCallback(() => {
+    stopYouTubeSegmentLoop();
+    const { startSeconds, endSeconds } = INTRO_SOUNDTRACK;
+    const bounds = { start: startSeconds, end: endSeconds };
+
+    segmentLoopRef.current = window.setInterval(() => {
+      const player = ytPlayerRef.current;
+      if (!player) return;
+      try {
+        const t = player.getCurrentTime();
+        if (introSegmentShouldRestart(t, bounds)) {
+          player.seekTo(bounds.start, true);
+        }
+      } catch {
+        /* ignore */
+      }
+    }, 250);
+  }, [stopYouTubeSegmentLoop]);
 
   const stopIntroMusic = useCallback(() => {
     audioRef.current?.pause();
-    spotifyRef.current?.pause();
+    ytPlayerRef.current?.pauseVideo();
+    stopYouTubeSegmentLoop();
     setIsPlaying(false);
-  }, []);
+  }, [stopYouTubeSegmentLoop]);
 
   useEffect(() => {
-    const audio = new Audio(INTRO_SOUNDTRACK.localClipPath);
-    audio.preload = "auto";
-    audioRef.current = audio;
-
-    const onLoaded = () => setLocalClipReady(true);
-    const onTimeUpdate = () => {
-      if (audio.currentTime >= INTRO_SOUNDTRACK.endSeconds) {
-        audio.pause();
-        setIsPlaying(false);
-      }
-    };
-    const onEnded = () => setIsPlaying(false);
-    const onError = () => {
-      audioRef.current = null;
-      setLocalClipReady(false);
-    };
-
-    audio.addEventListener("loadeddata", onLoaded);
-    audio.addEventListener("timeupdate", onTimeUpdate);
-    audio.addEventListener("ended", onEnded);
-    audio.addEventListener("error", onError);
-
-    return () => {
-      audio.removeEventListener("loadeddata", onLoaded);
-      audio.removeEventListener("timeupdate", onTimeUpdate);
-      audio.removeEventListener("ended", onEnded);
-      audio.removeEventListener("error", onError);
-      audio.pause();
-    };
-  }, []);
-
-  useEffect(() => {
-    const host = embedHostRef.current;
-    if (!host) return;
-
     let cancelled = false;
+    const audioSrc = getIntroAudioSrc();
 
-    loadSpotifyIframeApi().then((api) => {
+    const markReady = (hasSource: boolean, mode: PlaybackMode) => {
+      modeRef.current = mode;
+      setHasAudioSource(hasSource);
+      setUsesYouTube(mode === "youtube");
+      setIsMusicReady(true);
+    };
+
+    async function init() {
+      const hasLocal = await introLocalAudioAvailable(audioSrc);
       if (cancelled) return;
-      api.createController(
-        host,
-        {
-          uri: INTRO_SOUNDTRACK.spotifyUri,
-          width: "100%",
-          height: "80",
+
+      if (hasLocal) {
+        modeRef.current = "audio";
+        const audio = new Audio(audioSrc);
+        audio.preload = "auto";
+        audio.loop = false;
+        audio.volume = 0.45;
+        audioRef.current = audio;
+
+        const onLoaded = () => seekAudioToIntroStart(audio);
+        const onTimeUpdate = () => {
+          const bounds = getIntroPlaybackBounds(
+            Number.isFinite(audio.duration) ? audio.duration : undefined
+          );
+          if (introSegmentShouldRestart(audio.currentTime, bounds)) {
+            audio.currentTime = bounds.start;
+          }
+        };
+        const onPlay = () => setIsPlaying(true);
+        const onPause = () => setIsPlaying(false);
+
+        audio.addEventListener("loadedmetadata", onLoaded);
+        audio.addEventListener("timeupdate", onTimeUpdate);
+        audio.addEventListener("play", onPlay);
+        audio.addEventListener("pause", onPause);
+
+        markReady(true, "audio");
+        return;
+      }
+
+      const videoId = getIntroYoutubeVideoId();
+      if (!videoId) {
+        markReady(false, "none");
+        return;
+      }
+
+      modeRef.current = "youtube";
+      setUsesYouTube(true);
+      await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+      if (cancelled || !ytHostRef.current) return;
+
+      ytHostRef.current.innerHTML = "";
+      const mount = document.createElement("div");
+      mount.id = "slgoy-yt-intro-player";
+      ytHostRef.current.appendChild(mount);
+
+      const YT = await loadYouTubeIframeApi();
+      if (cancelled) return;
+
+      const { startSeconds } = INTRO_SOUNDTRACK;
+
+      new YT.Player(mount, {
+        width: 320,
+        height: 180,
+        videoId,
+        playerVars: {
+          autoplay: 0,
+          controls: 0,
+          disablekb: 1,
+          fs: 0,
+          modestbranding: 1,
+          playsinline: 1,
+          rel: 0,
+          start: startSeconds,
+          end: INTRO_SOUNDTRACK.endSeconds,
+          origin: window.location.origin,
         },
-        (controller) => {
-          spotifyRef.current = controller;
-          controller.addListener("ready", () => {
-            spotifyReadyRef.current = true;
-          });
-          controller.addListener("playback_update", (e) => {
-            const position = e.data?.position ?? 0;
-            if (position >= INTRO_SOUNDTRACK.endSeconds * 1000) {
-              controller.pause();
-              setIsPlaying(false);
-            } else if (position >= INTRO_SOUNDTRACK.startSeconds * 1000) {
-              setIsPlaying(true);
+        events: {
+          onReady: (event) => {
+            if (cancelled) return;
+            ytPlayerRef.current = event.target;
+            event.target.setVolume(70);
+            markReady(true, "youtube");
+          },
+          onStateChange: (event) => {
+            const player = ytPlayerRef.current;
+            if (!player || !window.YT) return;
+
+            if (event.data === window.YT.PlayerState.ENDED) {
+              syncStartRef.current = true;
+              startYouTubeIntro(player);
+              startYouTubeSegmentLoop();
+              return;
             }
-          });
-        }
-      );
-    });
+
+            if (event.data === window.YT.PlayerState.PLAYING) {
+              setIsPlaying(true);
+              startYouTubeSegmentLoop();
+
+              if (syncStartRef.current) {
+                window.clearTimeout(segmentGuardRef.current ?? undefined);
+                segmentGuardRef.current = window.setTimeout(() => {
+                  try {
+                    const t = player.getCurrentTime();
+                    if (t < startSeconds - 0.5) {
+                      player.seekTo(startSeconds, true);
+                    } else {
+                      syncStartRef.current = false;
+                    }
+                  } catch {
+                    /* ignore */
+                  }
+                }, 400);
+              }
+            }
+
+            if (event.data === window.YT.PlayerState.PAUSED) {
+              setIsPlaying(false);
+            }
+          },
+        },
+      });
+    }
+
+    const readyFallback = window.setTimeout(() => setIsMusicReady(true), 6000);
+
+    init().catch(() => markReady(false, "none"));
 
     return () => {
       cancelled = true;
+      window.clearTimeout(readyFallback);
+      window.clearTimeout(segmentGuardRef.current ?? undefined);
+      stopYouTubeSegmentLoop();
+      try {
+        ytPlayerRef.current?.destroy();
+      } catch {
+        /* ignore */
+      }
+      ytPlayerRef.current = null;
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+      modeRef.current = "none";
     };
-  }, []);
+  }, [startYouTubeSegmentLoop, stopYouTubeSegmentLoop]);
 
   const startIntroMusic = useCallback(async (): Promise<boolean> => {
-    const start = INTRO_SOUNDTRACK.startSeconds;
+    const mode = modeRef.current;
 
-    const audio = audioRef.current;
-    if (localClipReady && audio) {
+    if (mode === "audio") {
+      const audio = audioRef.current;
+      if (!audio) return false;
       try {
-        audio.currentTime = start;
+        seekAudioToIntroStart(audio);
         await audio.play();
         setIsPlaying(true);
         return true;
       } catch {
-        /* try Spotify */
+        return false;
       }
     }
 
-    const controller = spotifyRef.current;
-    if (!controller) return false;
-
-    if (!spotifyReadyRef.current) {
-      await new Promise<void>((resolve) => {
-        const t = window.setTimeout(resolve, 1500);
-        controller.addListener("ready", () => {
-          window.clearTimeout(t);
-          spotifyReadyRef.current = true;
-          resolve();
-        });
-      });
+    if (mode === "youtube") {
+      const player = ytPlayerRef.current;
+      if (!player) return false;
+      try {
+        syncStartRef.current = true;
+        startYouTubeIntro(player);
+        startYouTubeSegmentLoop();
+        setIsPlaying(true);
+        return true;
+      } catch {
+        return false;
+      }
     }
 
-    try {
-      controller.seek(start * 1000);
-      controller.play();
-      setIsPlaying(true);
-      return true;
-    } catch {
-      return false;
-    }
-  }, [localClipReady]);
+    return false;
+  }, [startYouTubeSegmentLoop]);
 
   return (
-    <IntroMusicContext.Provider value={{ startIntroMusic, stopIntroMusic, isPlaying }}>
+    <IntroMusicContext.Provider
+      value={{
+        startIntroMusic,
+        stopIntroMusic,
+        isPlaying,
+        isMusicReady,
+        hasAudioSource,
+      }}
+    >
       {children}
-      <div
-        ref={embedHostRef}
-        id="spotify-site-embed"
-        className="pointer-events-none fixed bottom-0 left-0 h-[80px] w-[320px] opacity-[0.02]"
-        aria-hidden
-      />
-      {isPlaying && (
-        <p
-          className="pointer-events-none fixed bottom-4 right-4 z-[100] rounded border border-hot-fuchsia/40 bg-power-black/90 px-3 py-2 font-display text-[0.6rem] uppercase tracking-[0.25em] text-hot-fuchsia"
-          role="status"
-        >
-          Intro playing
-        </p>
+      {usesYouTube && (
+        <div
+          ref={ytHostRef}
+          aria-hidden
+          className="pointer-events-none fixed bottom-4 left-4 z-[-1] overflow-hidden"
+          style={{ width: 320, height: 180, opacity: 0.01 }}
+        />
       )}
     </IntroMusicContext.Provider>
   );

@@ -31,7 +31,7 @@ export function HomeHero() {
           <HomeHeroImage />
         </div>
         <div
-          className="absolute inset-0 bg-gradient-to-r from-black/92 via-black/50 to-black/10 md:from-black/85 md:via-black/35 md:to-transparent"
+          className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/40 to-black/15 md:from-black/85 md:via-black/35 md:to-transparent"
           aria-hidden
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/30" aria-hidden />

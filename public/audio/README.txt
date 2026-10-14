@@ -1,9 +1,12 @@
-Optional intro clip for exact 0:34–1:16 playback on /intro (no Spotify login required).
+Intro music (no Spotify widget — same approach as elite-henna.vercel.app):
 
-Save a licensed excerpt as:
-  intro-segment.mp3
+1. Default: hidden YouTube playback of JOHN ELLE — You've Got The Love from 0:34
+   (override with NEXT_PUBLIC_INTRO_YOUTUBE_ID in .env.local)
 
-From: You've Got The Love — JOHN ELLE
-https://open.spotify.com/track/4Mhivjnm1UNw5nhHCioZOZ
+2. Optional higher quality: save a licensed excerpt (div0:34–1:16) as:
+   intro-segment.mp3
+   Spotify reference: https://open.spotify.com/track/4Mhivjnm1UNw5nhHCioZOZ
 
-If this file is missing, the intro page uses the Spotify embed instead.
+   Or set NEXT_PUBLIC_INTRO_AUDIO_URL to a direct MP3 URL.
+
+Music starts when the guest taps "Enter to site" and keeps playing while they browse.

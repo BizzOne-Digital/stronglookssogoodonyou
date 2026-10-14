@@ -1,8 +1,6 @@
 import { SITE_IMAGES } from "@/lib/site-images";
 import type { PresentationKind } from "@/lib/image-presentations";
 
-const gallery = "/images/gallery";
-
 export type PackageImage = {
   src: string;
   alt: string;
@@ -22,13 +20,13 @@ export const PACKAGE_IMAGES_BY_SLUG: Record<string, PackageImage> = {
     presentation: "ambient",
   },
   "lifestyle-transformation": {
-    src: SITE_IMAGES.gymBenchWindow,
-    alt: "Training environment for long term lifestyle coaching",
-    presentation: "ambient",
+    src: "/images/packages/lifestyle-transformation.png",
+    alt: "Joanna Michel on stage at an IFBB professional league event in Toronto",
+    presentation: "competition",
   },
   "bodybuilding-competition-prep": {
-    src: `${gallery}/03-competition-stage.jpg`,
-    alt: "Joanna Michel on stage in competition bikini",
+    src: "/images/packages/bodybuilding-competition-prep.png",
+    alt: "Joanna Michel posing on stage at a natural bodybuilding championship",
     presentation: "competition",
   },
 };
@@ -39,6 +37,16 @@ export function resolvePackageImage(
   name?: string
 ): PackageImage {
   const defaults = PACKAGE_IMAGES_BY_SLUG[slug];
+  if (
+    (slug === "bodybuilding-competition-prep" || slug === "lifestyle-transformation") &&
+    defaults
+  ) {
+    return {
+      src: defaults.src,
+      alt: defaults.alt,
+      presentation: defaults.presentation,
+    };
+  }
   if (imageUrl?.trim()) {
     return {
       src: imageUrl,

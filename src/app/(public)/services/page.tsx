@@ -40,9 +40,9 @@ export default async function ServicesPage() {
               <article
                 key={svc.id}
                 id={svc.slug}
-                className="grid gap-10 border-t border-white/10 pt-16 md:grid-cols-12 md:gap-12"
+                className="grid gap-10 border-t border-white/10 pt-16 md:grid-cols-12 md:gap-x-12 md:gap-y-8"
               >
-                <div className="md:col-span-5">
+                <div className="md:col-span-5 md:row-span-1">
                   <h2 className="font-display text-3xl uppercase tracking-tight md:text-4xl">
                     {svc.name}
                   </h2>
@@ -52,13 +52,15 @@ export default async function ServicesPage() {
                     {svc.priceDisplay || "Contact for pricing"}
                   </p>
                 </div>
-                <div className="md:col-span-7">
+                <div className="md:col-span-7 md:row-span-1">
                   <FramedImage
                     src={pkgImage.src}
                     alt={pkgImage.alt}
                     presentation={pkgImage.presentation}
-                    className="mb-8"
+                    className="md:max-h-[min(70vh,520px)]"
                   />
+                </div>
+                <div className="md:col-span-12">
                   <p className="whitespace-pre-line text-soft-silver">
                     {adminTextToPlain(svc.description)}
                   </p>

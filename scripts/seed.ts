@@ -13,10 +13,11 @@ import { MediaAsset } from "../src/models/MediaAsset";
 import { GalleryItem } from "../src/models/GalleryItem";
 import { Testimonial } from "../src/models/Testimonial";
 import { STATIC_GALLERY_IMAGES } from "../src/lib/gallery-static";
+import { PACKAGE_IMAGES_BY_SLUG } from "../src/lib/service-images";
 
 const PACKAGE_TERMS = `All prices are in CAD and paid upfront.
 
-Each package includes its listed services and check-in frequency.
+Each package includes its listed services and check in frequency.
 
 Coaching communication takes place during defined business hours.
 
@@ -39,7 +40,7 @@ const SERVICES = [
       "Designed for women who want to establish consistency, improve their training, and begin working toward a stronger, more defined physique.",
     inclusions: [
       "Personalized strength-training program.",
-      "Two scheduled progress check-ins per month.",
+      "Two scheduled progress check ins per month.",
       "Progress photos, body weight, and measurements.",
       "Training adjustments based on progress.",
       "General nutrition guidance within the coach's qualifications.",
@@ -59,7 +60,7 @@ const SERVICES = [
       "Designed for women ready to commit to longer-term physique development, improve their training, and build habits that support lasting progress.",
     inclusions: [
       "Personalized training program and progress planning.",
-      "Weekly scheduled check-ins.",
+      "Weekly scheduled check ins.",
       "Progress photos, body weight, and measurements.",
       "Training and nutrition guidance tailored to individual goals.",
       "Program adjustments based on progress and feedback.",
@@ -77,20 +78,20 @@ const SERVICES = [
     priceCents: 240000,
     tagline: "Build a lifestyle that supports the woman you're becoming.",
     description:
-      "Fitness should enhance your life—not require you to put it on hold. This program helps women maintain structure and progress while navigating work, family, travel, and celebrations.",
+      "Fitness should enhance your life, not require you to put it on hold. This program helps women maintain structure and progress while navigating work, family, travel, and celebrations.",
     inclusions: [
       "Personalized training and ongoing progress planning.",
-      "Weekly scheduled check-ins.",
+      "Weekly scheduled check ins.",
       "Progress photos, body weight, and measurements.",
       "Training and nutrition guidance within the coach's qualifications.",
       "Adjustments based on progress, lifestyle, and goals.",
       "One 20-minute video consultation per month.",
       "Strategies for navigating birthdays, weddings, vacations, holidays, and special occasions.",
-      "Guidance on balancing planned flexibility with long-term consistency.",
+      "Guidance on balancing planned flexibility with long term consistency.",
       "Opportunity to attend a local bodybuilding show with the coach, subject to availability and agreed arrangements.",
     ],
     idealFor:
-      "Women who want long-term accountability, sustainable habits, and a fitness routine that works with real life.",
+      "Women who want long term accountability, sustainable habits, and a fitness routine that works with real life.",
     order: 3,
   },
   {
@@ -103,7 +104,7 @@ const SERVICES = [
       "A specialist coaching package for physique athletes preparing for their first bodybuilding competition, providing structured preparation, individualized guidance, and progress monitoring throughout the agreed prep period.",
     inclusions: [
       "Individualized training and nutrition planning.",
-      "Weekly physique check-ins and progress reviews.",
+      "Weekly physique check ins and progress reviews.",
       "Progress photos, body weight, and measurements.",
       "Posing guidance and video feedback.",
       "Meal-preparation strategies and practical nutrition planning.",
@@ -124,7 +125,7 @@ const FAQ_SEED = [
     group: "Getting started",
     question: "Is this coaching suitable if I'm a beginner?",
     answer:
-      "Yes. Programs are tailored to your experience level, equipment access, and goals—whether you're starting from zero or returning after time away.",
+      "Yes. Programs are tailored to your experience level, equipment access, and goals, whether you're starting from zero or returning after time away.",
     published: true,
     order: 1,
   },
@@ -140,7 +141,7 @@ const FAQ_SEED = [
     group: "Online coaching",
     question: "Is coaching delivered online?",
     answer:
-      "Yes. STRONG LOOKS GOOD ON YOU™ is built around online coaching with structured training, check-ins, and accountability—designed for women wherever they are.",
+      "Yes. STRONG LOOKS GOOD ON YOU™ is built around online coaching with structured training, check ins, and accountability, designed for women wherever they are.",
     published: true,
     order: 3,
   },
@@ -199,7 +200,7 @@ async function seed() {
         bookingMode: "request_only",
         packageTermsHtml: PACKAGE_TERMS,
         footerTagline:
-          "Strength, discipline, confidence—and becoming the strongest version of yourself.",
+          "Strength, discipline, confidence, and becoming the strongest version of yourself.",
         seoDefaults: {
           title: "STRONG LOOKS GOOD ON YOU™ | Coaching for Women",
           description:
@@ -211,9 +212,13 @@ async function seed() {
   );
 
   for (const svc of SERVICES) {
+    const pkgImage = PACKAGE_IMAGES_BY_SLUG[svc.slug];
     await Service.findOneAndUpdate(
       { slug: svc.slug },
       {
+        $set: {
+          imageUrl: pkgImage?.src,
+        },
         $setOnInsert: {
           ...svc,
           currency: "CAD",
@@ -259,7 +264,7 @@ async function seed() {
           data: {
             heading: "YOUR NEXT CHAPTER STARTS HERE",
             body:
-              "Training that meets you where you are—and moves you toward the physique and confidence you're building on purpose.",
+              "Training that meets you where you are, and moves you toward the physique and confidence you're building on purpose.",
           },
         },
       ],
@@ -299,7 +304,7 @@ async function seed() {
           visible: true,
           order: 1,
           data: {
-            html: `<p><strong>DRAFT — Owner review required before launch.</strong></p>
+            html: `<p><strong>DRAFT, Owner review required before launch.</strong></p>
 <p>This policy describes how STRONG LOOKS GOOD ON YOU™ ("we") handles information collected through this website.</p>
 <h2>Information we collect</h2>
 <p>Contact inquiries, coaching applications, and consultation booking requests may include your name, email, time zone, goals, and messages you choose to provide.</p>
@@ -327,7 +332,7 @@ async function seed() {
       name: "Joanna Michel",
       role: "Founder & Coach",
       bio:
-        "Competitive bodybuilding athlete and coach behind STRONG LOOKS GOOD ON YOU™—helping women train with purpose, structure, and confidence.",
+        "Competitive bodybuilding athlete and coach behind STRONG LOOKS GOOD ON YOU™, helping women train with purpose, structure, and confidence.",
       order: 0,
       published: true,
       isFounder: true,
@@ -339,6 +344,18 @@ async function seed() {
     { $setOnInsert: { key: "default" } },
     { upsert: true }
   );
+
+  /** Removed from site: Instagram story with a third-party coach handle (no consent). */
+  const removedGalleryPaths = ["/images/gallery/02-competition-backstage.jpg"];
+  for (const path of removedGalleryPaths) {
+    const staleMedia = await MediaAsset.find({
+      $or: [{ url: path }, { secureUrl: path }],
+    });
+    for (const media of staleMedia) {
+      await GalleryItem.deleteMany({ mediaId: media._id });
+      await MediaAsset.deleteOne({ _id: media._id });
+    }
+  }
 
   let galleryOrder = 0;
   for (const img of STATIC_GALLERY_IMAGES) {
@@ -355,16 +372,18 @@ async function seed() {
       },
       { upsert: true, new: true }
     );
-    const exists = await GalleryItem.findOne({ mediaId: media._id });
-    if (!exists) {
-      await GalleryItem.create({
-        mediaId: media._id,
-        category: img.category,
-        caption: img.caption,
-        order: galleryOrder++,
-        published: true,
-      });
-    }
+    await GalleryItem.findOneAndUpdate(
+      { mediaId: media._id },
+      {
+        $set: {
+          category: img.category,
+          caption: img.caption,
+          order: galleryOrder++,
+          published: true,
+        },
+      },
+      { upsert: true }
+    );
   }
 
   const testimonialSeeds = [
@@ -381,7 +400,7 @@ async function seed() {
     {
       displayName: "Client B",
       quote:
-        "Another placeholder testimonial—update text, set consent, and publish when ready.",
+        "Another placeholder testimonial, update text, set consent, and publish when ready.",
       packageName: "Lifestyle Transformation",
       consent: false,
       featured: false,

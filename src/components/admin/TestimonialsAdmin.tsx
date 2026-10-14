@@ -33,7 +33,7 @@ export function TestimonialsAdmin({ items }: { items: TestimonialRow[] }) {
           <p className="font-medium">{t.displayName}</p>
           <p className="mt-2 text-black/70">&ldquo;{t.quote}&rdquo;</p>
           <p className="mt-2 text-xs text-black/50">
-            {t.packageName || "—"} · {t.published ? "published" : "hidden"} · consent:{" "}
+            {t.packageName || "n/a"} · {t.published ? "published" : "hidden"} · consent:{" "}
             {t.consent ? "yes" : "no"}
           </p>
           <button

@@ -14,7 +14,7 @@ export default function ContactPage() {
       <PageHero
         label="CONTACT"
         title="Let's connect"
-        description="Questions before you apply? Wondering which package fits your season of life? Reach out by email, Instagram, or the form below. Coaching is online—there is no public studio address or phone line."
+        description="Questions before you apply? Wondering which package fits your season of life? Reach out by email, Instagram, or the form below. Coaching is online, there is no public studio address or phone line."
         imageSrc={SITE_IMAGES.gymMatDumbbell}
         imageAlt="Dumbbell and yoga mat in a training space"
       />
@@ -27,7 +27,7 @@ export default function ContactPage() {
                 {BRAND.email}
               </a>
               <p className="mt-3 text-sm text-power-black/60">
-                Best for detailed questions, application follow-ups, and scheduling notes.
+                Best for detailed questions, application follow ups, and scheduling notes.
               </p>
             </div>
             <div>
@@ -47,7 +47,7 @@ export default function ContactPage() {
             <div className="border-t border-power-black/10 pt-8">
               <p className="font-display text-xs tracking-[0.3em] text-hot-fuchsia">READY TO START?</p>
               <p className="mt-3 text-power-black/75">
-                The coaching application captures everything needed to review fit—goals, schedule, equipment, and package preference.
+                The coaching application captures everything needed to review fit, goals, schedule, equipment, and package preference.
               </p>
               <Button href="/apply" className="mt-6">Apply for Coaching</Button>
               <p className="mt-6 text-sm text-power-black/60">

@@ -35,7 +35,7 @@ export function MeetJoannaBio({
         </div>
 
         <div className="md:col-span-7">
-          <p className={`font-display text-xs tracking-[0.4em] ${headingAccent}`}>SMALL BIO</p>
+          <p className={`font-display text-xs tracking-[0.4em] ${headingAccent}`}>ABOUT</p>
           <h2 className="mt-3 font-display text-3xl uppercase tracking-tight md:text-4xl lg:text-5xl">
             Meet Joanna Michel
           </h2>

@@ -14,6 +14,7 @@ import type { IService } from "@/models/Service";
 import {
   HOME_GALLERY_PREVIEW,
   STATIC_GALLERY_IMAGES,
+  sortGalleryImages,
 } from "@/lib/gallery-static";
 
 export type PublicGalleryImage = {
@@ -22,6 +23,7 @@ export type PublicGalleryImage = {
   alt: string;
   caption?: string;
   category: string;
+  order?: number;
 };
 
 export async function getSiteSettings() {
@@ -145,6 +147,7 @@ function mapDbGalleryToImages(
         alt: media?.alt || item.caption || "Gallery image",
         caption: item.caption,
         category: item.category,
+        order: item.order,
       };
     })
     .filter(Boolean) as PublicGalleryImage[];
@@ -153,7 +156,7 @@ function mapDbGalleryToImages(
 /** Published gallery images from Mongo, or static files when DB is empty. */
 export async function getPublicGalleryImages(): Promise<PublicGalleryImage[]> {
   try {
-    const mapped = mapDbGalleryToImages(await getPublicGallery());
+    const mapped = sortGalleryImages(mapDbGalleryToImages(await getPublicGallery()));
     if (mapped.length > 0) return mapped;
   } catch {
     // Mongo unavailable
@@ -174,8 +177,10 @@ export async function getHomeGalleryPreviewImages(): Promise<PublicGalleryImage[
       await GalleryItem.find({ published: true }).sort({ order: 1 }).populate("mediaId").lean()
     );
     if (all.length > 0) {
-      const previewCount = Math.min(6, all.length);
-      return all.slice(0, previewCount);
+      const sorted = sortGalleryImages(all);
+      const personal = sorted.filter((i) => i.category !== "Competition");
+      const competition = sorted.filter((i) => i.category === "Competition");
+      return [...personal.slice(0, 4), ...competition.slice(0, 2)].slice(0, 6);
     }
   } catch {
     // fall through

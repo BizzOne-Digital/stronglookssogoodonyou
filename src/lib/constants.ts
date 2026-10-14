@@ -23,6 +23,7 @@ export const COLORS = {
 
 export const PUBLIC_ROUTES = [
   "/",
+  "/intro",
   "/about",
   "/services",
   "/coaching-method",

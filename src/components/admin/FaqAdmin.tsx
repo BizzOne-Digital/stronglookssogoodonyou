@@ -29,7 +29,7 @@ export function FaqAdmin({ items }: { items: Faq[] }) {
       {list.map((f) => (
         <div key={f.id} className="rounded border bg-white p-4 text-sm">
           <p className="font-medium">{f.question}</p>
-          <p className="mt-2 text-black/70">{f.answer || "(draft — no answer)"}</p>
+          <p className="mt-2 text-black/70">{f.answer || "(draft, no answer)"}</p>
           <button
             type="button"
             className="mt-2 text-hot-fuchsia"

@@ -49,7 +49,7 @@ export default async function ApplyPage({ searchParams }: Props) {
         dark
         label="WHAT HAPPENS NEXT"
         title="After you submit"
-        lead="Applications are reviewed thoughtfully. Follow-up happens via your preferred contact method. Package enrollment and payment details are discussed after fit is confirmed—not through this form alone."
+        lead="Applications are reviewed thoughtfully. Follow-up happens via your preferred contact method. Package enrollment and payment details are discussed after fit is confirmed, not through this form alone."
       />
       <section className="bg-power-black pb-24 pt-8 text-clean-white">
         <div className="mx-auto max-w-2xl px-4 md:px-8">

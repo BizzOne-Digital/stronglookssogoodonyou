@@ -4,11 +4,13 @@ import { Button } from "@/components/ui/Button";
 import { HomeMotion } from "@/components/home/HomeMotion";
 import { HomeHero } from "@/components/home/HomeHero";
 import { MeetJoannaBio } from "@/components/about/MeetJoannaBio";
-import { BRAND } from "@/lib/constants";
 import { HomeGalleryPreview } from "@/components/home/HomeGalleryPreview";
 import { SITE_IMAGES } from "@/lib/site-images";
 import type { PublicGalleryImage, PublicService } from "@/lib/data/public";
 import { adminTextToPlain } from "@/lib/admin-text";
+import { FramedImage } from "@/components/ui/FramedImage";
+import { resolvePackageImage } from "@/lib/service-images";
+import { WorkoutVideo } from "@/components/media/WorkoutVideo";
 
 type Props = {
   intro?: string;
@@ -36,12 +38,6 @@ export function HomePageContent({
         id="next-section"
         className="relative overflow-x-clip overflow-y-visible bg-clean-white py-24 md:py-32"
       >
-        <p
-          data-parallax-word
-          className="pointer-events-none absolute left-0 top-8 max-w-full font-display text-[11vw] uppercase leading-none text-stroke opacity-20 sm:text-[12vw]"
-        >
-          STRONG
-        </p>
         <div className="relative mx-auto grid max-w-7xl gap-12 px-4 md:grid-cols-2 md:items-center md:px-8">
           <div className="relative aspect-[4/3] overflow-hidden md:aspect-[4/5]">
             <Image
@@ -54,7 +50,7 @@ export function HomePageContent({
           </div>
           <div className="space-y-6">
             <div>
-              <p className="font-display text-xs tracking-[0.4em] text-hot-fuchsia">01</p>
+              <p className="font-display text-xs tracking-[0.4em] text-hot-fuchsia">YOUR JOURNEY</p>
               <h2 className="mt-4 font-display text-4xl uppercase tracking-tight md:text-5xl">
                 {nextChapter?.heading || "YOUR NEXT CHAPTER STARTS HERE"}
               </h2>
@@ -63,7 +59,7 @@ export function HomePageContent({
               <p>
                 {adminTextToPlain(
                   nextChapter?.body ||
-                    "Training that meets you where you are—and moves you toward the physique and confidence you're building on purpose."
+                    "Training that meets you where you are, and moves you toward the physique and confidence you're building on purpose."
                 )}
               </p>
               <p>
@@ -73,7 +69,7 @@ export function HomePageContent({
                 )}
               </p>
               <p>
-                Online 1:1 coaching for women who want structure without shame—beginners, returners, and athletes preparing for their next season.
+                Online 1 on 1 coaching for women who want structure without shame, beginners, returners, and athletes preparing for their next season.
               </p>
             </div>
           </div>
@@ -90,17 +86,17 @@ export function HomePageContent({
         >
           <p className="font-display text-xs tracking-[0.4em] text-hot-fuchsia">COACHING</p>
           <h2 className="mt-4 max-w-2xl font-display text-4xl uppercase md:text-5xl">
-            Packages built for real life—and real strength
+            Packages built for real life, and real strength
           </h2>
           <p className="mt-6 max-w-2xl text-soft-silver">
-            From a focused reset to lifestyle-long accountability and competition prep—each package is tailored to your experience, schedule, and equipment. Explore details on the{" "}
+            From a focused reset to lifestyle long accountability and competition prep, each package is tailored to your experience, schedule, and equipment. Explore details on the{" "}
             <Link href="/services" className="text-hot-fuchsia underline">Services</Link> page or apply with &ldquo;Help me choose.&rdquo;
           </p>
           <p
             data-horizontal-hint
             className="mt-6 hidden text-xs uppercase tracking-[0.25em] text-soft-silver/80 lg:block"
           >
-            Scroll to explore each package →
+            Scroll to explore each package
           </p>
         </div>
         <div
@@ -111,16 +107,23 @@ export function HomePageContent({
             data-horizontal-track
             className="flex w-max max-w-none gap-4 px-4 will-change-transform sm:gap-6 md:px-8 lg:gap-8 lg:py-1"
           >
-            {services.map((svc, i) => (
+            {services.map((svc) => {
+              const pkgImage = resolvePackageImage(svc.slug, svc.imageUrl, svc.name);
+              return (
               <article
                 key={svc.id}
                 data-horizontal-card
-                className="flex w-[min(85vw,calc(100vw-2rem))] max-w-md shrink-0 flex-col border border-white/15 bg-power-black p-5 sm:p-6 md:w-[min(420px,38vw)] lg:min-h-[280px]"
+                className="flex w-[min(85vw,calc(100vw-2rem))] max-w-md shrink-0 flex-col overflow-hidden border border-white/15 bg-power-black md:w-[min(420px,38vw)]"
               >
-                <p className="font-display text-6xl text-hot-fuchsia/30">
-                  {String(i + 1).padStart(2, "0")}
-                </p>
-                <h3 className="mt-4 font-display text-2xl uppercase">{svc.name}</h3>
+                <FramedImage
+                  src={pkgImage.src}
+                  alt={pkgImage.alt}
+                  presentation={pkgImage.presentation}
+                  sizes="(max-width:768px) 85vw, 420px"
+                  className="shrink-0"
+                />
+                <div className="flex flex-1 flex-col p-5 sm:p-6">
+                <h3 className="font-display text-2xl uppercase leading-tight">{svc.name}</h3>
                 <p className="mt-2 text-sm text-soft-silver">{svc.tagline}</p>
                 <p className="mt-4 text-xs tracking-widest text-soft-silver">
                   {svc.durationLabel}
@@ -129,65 +132,34 @@ export function HomePageContent({
                 <Button href={`/apply?package=${svc.slug}`} className="mt-6 w-full justify-center">
                   Apply
                 </Button>
+                </div>
               </article>
-            ))}
+            );
+            })}
           </div>
         </div>
       </section>
 
-      <section data-panels className="relative">
-        <div
-          data-panel
-          className="relative z-10 bg-clean-white py-24 md:py-32"
-        >
-          <div className="mx-auto max-w-7xl px-4 md:px-8">
-            <p className="font-display text-xs tracking-[0.4em] text-hot-fuchsia">WHO IT&apos;S FOR</p>
-            <h2 className="mt-4 font-display text-4xl uppercase md:text-5xl">
-              Women ready for their next chapter
-            </h2>
-            <p className="mt-6 max-w-3xl text-lg text-power-black/80">
-              Starting out, starting over, or leveling up—after life changes, motherhood, relocation, or simply wanting to train with more intention. Beginners and experienced athletes are welcome.
-            </p>
-            <ul className="mt-8 grid gap-4 md:grid-cols-2 text-power-black/75">
-              <li className="border-l-2 border-hot-fuchsia pl-4">Purposeful strength training—not random workouts</li>
-              <li className="border-l-2 border-hot-fuchsia pl-4">Progress check-ins that keep you accountable</li>
-              <li className="border-l-2 border-hot-fuchsia pl-4">Guidance that fits real schedules and real life</li>
-              <li className="border-l-2 border-hot-fuchsia pl-4">Respectful coaching—no guilt, no unrealistic promises</li>
-            </ul>
-          </div>
-        </div>
-        <div
-          data-panel
-          className="relative z-20 bg-power-black py-24 text-clean-white md:py-32"
-        >
-          <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 md:grid-cols-2 md:px-8">
-            <div data-reveal className="relative aspect-[4/5] overflow-hidden">
-              <Image
-                src="/images/joanna-michel.jpg"
-                alt="Joanna Michel, founder of STRONG LOOKS GOOD ON YOU"
-                fill
-                className="object-cover"
-                sizes="(max-width:768px) 100vw, 50vw"
-              />
-            </div>
-            <div>
-              <p className="font-display text-xs tracking-[0.4em] text-hot-fuchsia">ABOUT JOANNA</p>
-              <h2 className="mt-4 font-display text-4xl uppercase">Founder &amp; Coach</h2>
-              <p className="mt-6 text-soft-silver">
-                A competitive bodybuilding athlete and fitness coach behind {BRAND.name}. Purposeful strength training, personalized guidance, and sustainable habits.
-              </p>
-              <p className="mt-4 text-soft-silver">
-                The brand stands for strength, discipline, confidence, and becoming the strongest version of yourself—on your timeline, with coaching that meets you where you are.
-              </p>
-              <div className="mt-8 flex flex-wrap gap-4">
-                <Button href="/about" variant="secondary" className="border-clean-white text-clean-white hover:bg-clean-white hover:text-power-black">
-                  Read Her Story
-                </Button>
-                <Button href="/coaching-method" variant="ghost" className="text-clean-white hover:border-clean-white">
-                  How Coaching Works
-                </Button>
-              </div>
-            </div>
+      <WorkoutVideo />
+
+      <section className="bg-clean-white py-24 md:py-32">
+        <div className="mx-auto max-w-7xl px-4 md:px-8">
+          <p className="font-display text-xs tracking-[0.4em] text-hot-fuchsia">WHO IT&apos;S FOR</p>
+          <h2 className="mt-4 font-display text-4xl uppercase md:text-5xl">
+            Women ready for their next chapter
+          </h2>
+          <p className="mt-6 max-w-3xl text-lg text-power-black/80">
+            Starting out, starting over, or leveling up, after life changes, motherhood, relocation, or simply wanting to train with more intention. Beginners and experienced athletes are welcome.
+          </p>
+          <ul className="mt-8 grid gap-4 md:grid-cols-2 text-power-black/75">
+            <li className="border-l-2 border-hot-fuchsia pl-4">Purposeful strength training, not random workouts</li>
+            <li className="border-l-2 border-hot-fuchsia pl-4">Progress check ins that keep you accountable</li>
+            <li className="border-l-2 border-hot-fuchsia pl-4">Guidance that fits real schedules and real life</li>
+            <li className="border-l-2 border-hot-fuchsia pl-4">Respectful coaching, no guilt, no unrealistic promises</li>
+          </ul>
+          <div className="mt-10 flex flex-wrap gap-4">
+            <Button href="/about">About Joanna</Button>
+            <Button href="/coaching-method" variant="secondary">How coaching works</Button>
           </div>
         </div>
       </section>
@@ -206,9 +178,9 @@ export function HomePageContent({
             />
             <div className="relative">
               <p className="font-display text-xs tracking-[0.35em] text-hot-fuchsia">METHOD</p>
-              <h2 className="mt-3 font-display text-2xl uppercase">Apply → Plan → Progress</h2>
+              <h2 className="mt-3 font-display text-2xl uppercase">Apply, Plan, Progress</h2>
               <p className="mt-4 text-sm text-soft-silver">
-                Share your goals, receive a personalized program, and build consistency through scheduled check-ins and honest feedback.
+                Share your goals, receive a personalized program, and build consistency through scheduled check ins and honest feedback.
               </p>
               <Link href="/coaching-method" className="mt-4 inline-block text-xs uppercase tracking-widest text-hot-fuchsia hover:underline">
                 See the full method
@@ -227,7 +199,7 @@ export function HomePageContent({
               <p className="font-display text-xs tracking-[0.35em] text-hot-fuchsia">TRAINING SPACE</p>
               <h2 className="mt-3 font-display text-2xl uppercase">Train where you are</h2>
               <p className="mt-4 text-sm text-soft-silver">
-                Commercial gym, home setup, or hybrid—programs are built around the equipment you actually have.
+                Commercial gym, home setup, or hybrid, programs are built around the equipment you actually have.
               </p>
               <Link href="/services" className="mt-4 inline-block text-xs uppercase tracking-widest text-hot-fuchsia hover:underline">
                 View packages
@@ -246,7 +218,7 @@ export function HomePageContent({
               <p className="font-display text-xs tracking-[0.35em] text-hot-fuchsia">QUESTIONS</p>
               <h2 className="mt-3 font-display text-2xl uppercase">FAQs</h2>
               <p className="mt-4 text-sm text-soft-silver">
-                Packages, online coaching, equipment, nutrition scope, and how to apply—answered in plain language.
+                Packages, online coaching, equipment, nutrition scope, and how to apply, answered in plain language.
               </p>
               <Link href="/faqs" className="mt-4 inline-block text-xs uppercase tracking-widest text-hot-fuchsia hover:underline">
                 Read FAQs
@@ -276,8 +248,7 @@ export function HomePageContent({
               {testimonials.slice(0, 2).map((t) => (
                 <blockquote key={t.displayName} className="border-l-2 border-hot-fuchsia pl-6">
                   <p className="text-lg">&ldquo;{adminTextToPlain(t.quote)}&rdquo;</p>
-                  <footer className="mt-4 text-sm text-soft-silver">
-                    — {t.displayName}
+                  <footer className="mt-4 text-sm text-soft-silver">{t.displayName}
                     {t.packageName ? ` · ${t.packageName}` : ""}
                   </footer>
                 </blockquote>

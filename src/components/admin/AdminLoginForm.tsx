@@ -19,7 +19,7 @@ export function AdminLoginForm() {
       <h1 className="font-display text-2xl uppercase">Admin</h1>
       <p className="text-xs text-power-black/60">
         Use <strong>ADMIN_EMAIL</strong> and <strong>ADMIN_PASSWORD</strong> from{" "}
-        <code className="text-[0.65rem]">.env.local</code> (copy the password—do not retype a
+        <code className="text-[0.65rem]">.env.local</code> (copy the password; do not retype a
         shorter one).
       </p>
       {state.error && (

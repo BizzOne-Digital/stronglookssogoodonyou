@@ -87,7 +87,7 @@ export function ApplyForm({
         ))}
       </div>
       <p className="font-display text-xs tracking-[0.3em] text-hot-fuchsia">
-        STEP {step + 1} — {steps[step]}
+        STEP {step + 1}, {steps[step]}
       </p>
 
       {step === 0 && (

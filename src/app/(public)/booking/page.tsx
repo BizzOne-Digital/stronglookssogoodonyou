@@ -17,14 +17,14 @@ export default function BookingPage() {
       />
       <ContentSection
         label="BEFORE YOU BOOK"
-        title="What this is—and what it isn't"
-        lead="A consultation is a chance to ask questions and align expectations. Enrollment happens through the coaching application and agreed package terms—not through this booking form alone."
+        title="What this is, and what it isn't"
+        lead="A consultation is a chance to ask questions and align expectations. Enrollment happens through the coaching application and agreed package terms, not through this booking form alone."
       >
         <ProseList
           items={[
             "Consultation booking is separate from package payment and enrollment",
-            "In request-only mode, your preferred times are reviewed before confirmation",
-            "When available-slot mode is enabled, you may select open times in your time zone",
+            "In request only mode, your preferred times are reviewed before confirmation",
+            "When available slot mode is enabled, you may select open times in your time zone",
             "You will receive confirmation that your request was received; final times are confirmed by the coach when applicable",
           ]}
         />
@@ -34,7 +34,7 @@ export default function BookingPage() {
           <div className="text-soft-silver">
             <p className="font-display text-xs tracking-[0.35em] text-hot-fuchsia">TIP</p>
             <p className="mt-4 leading-relaxed">
-              Include your time zone and a few windows that work for you. If you already know which package interests you, mention it in your notes—you can still complete the full application afterward.
+              Include your time zone and a few windows that work for you. If you already know which package interests you, mention it in your notes, you can still complete the full application afterward.
             </p>
             <p className="mt-6 leading-relaxed">
               For detailed package inclusions and durations, visit the Services page before your call so you can arrive with informed questions.

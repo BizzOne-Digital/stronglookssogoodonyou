@@ -59,7 +59,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: result.message }, { status: 409 });
     }
 
-    const text = `Consultation booked\n${parsed.data.name} — ${parsed.data.email}\n${start.toISOString()}\nAdmin: /admin/bookings/${result.id}`;
+    const text = `Consultation booked\n${parsed.data.name}, ${parsed.data.email}\n${start.toISOString()}\nAdmin: /admin/bookings/${result.id}`;
     const mail = await sendBusinessNotification({
       subject: `Booking confirmed request: ${parsed.data.name}`,
       text,

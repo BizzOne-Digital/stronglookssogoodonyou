@@ -27,7 +27,20 @@ export function adminTextToPlain(input: string): string {
   s = s.replace(/[ \t]+\n/g, "\n");
   s = s.replace(/\n{3,}/g, "\n\n");
 
+  s = normalizePublicCopy(s);
+
   return s.trim();
+}
+
+/** Em/en dashes and arrow separators → plain punctuation for public copy. */
+export function normalizePublicCopy(input: string): string {
+  let s = input;
+  s = s.replace(/\s*—\s*/g, ", ");
+  s = s.replace(/\s*–\s*/g, " to ");
+  s = s.replace(/\s*→\s*/g, ", ");
+  s = s.replace(/,\s*,+/g, ",");
+  s = s.replace(/[ \t]{2,}/g, " ");
+  return s;
 }
 
 export function splitAdminParagraphs(text: string): string[] {

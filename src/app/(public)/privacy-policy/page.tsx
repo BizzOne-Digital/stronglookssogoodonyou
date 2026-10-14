@@ -19,7 +19,7 @@ export default async function PrivacyPage() {
       <PageHero
         label="LEGAL"
         title="Privacy Policy"
-        description="How we handle information submitted through this website—including applications, contact forms, and booking requests. This draft should be reviewed by the business owner before launch."
+        description="How we handle information submitted through this website, including applications, contact forms, and booking requests. This draft should be reviewed by the business owner before launch."
       />
       <ContentSection
         bordered

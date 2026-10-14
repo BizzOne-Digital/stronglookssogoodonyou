@@ -18,7 +18,7 @@ export default async function ApplicationsPage() {
             <Link href={`/admin/applications/${a._id}`} className="text-hot-fuchsia">
               {a.fullName}
             </Link>
-            {" — "}
+            {", "}
             {a.status} · {a.preferredPackage}
           </li>
         ))}

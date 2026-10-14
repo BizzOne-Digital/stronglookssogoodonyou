@@ -40,7 +40,7 @@ export function PageContentEditor({
       <div>
         <label className="text-xs uppercase">Page content</label>
         <p className="mt-1 text-xs text-black/55">
-          Plain text only — no HTML. Use a blank line between paragraphs.
+          Plain text only. No HTML. Use a blank line between paragraphs.
         </p>
         <textarea
           className="input-field"

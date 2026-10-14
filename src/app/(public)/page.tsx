@@ -43,7 +43,7 @@ export default async function HomePage() {
       body: (nc?.data as { body?: string })?.body,
     };
   } catch {
-    // Mongo unavailable — static fallbacks in HomePageContent
+    // Mongo unavailable, static fallbacks in HomePageContent
   }
 
   return (

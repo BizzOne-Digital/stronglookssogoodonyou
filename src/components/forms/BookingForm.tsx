@@ -86,7 +86,7 @@ export function BookingForm() {
     return (
       <form onSubmit={slotForm.handleSubmit(submitSlot)} className="space-y-6">
         <input type="text" className="hidden" {...slotForm.register("website")} />
-        <p className="text-sm text-power-black/70">Times shown in {tz}. Consultation only — not a package purchase.</p>
+        <p className="text-sm text-power-black/70">Times shown in {tz}. Consultation only, not a package purchase.</p>
         <div>
           <label className="text-xs uppercase tracking-widest">Available slot</label>
           <select className="input-field" {...slotForm.register("slotKey")}>
@@ -119,7 +119,7 @@ export function BookingForm() {
     <form onSubmit={requestForm.handleSubmit(submitRequest)} className="space-y-6">
       <input type="text" className="hidden" {...requestForm.register("website")} />
       <p className="text-sm text-power-black/70">
-        Consultation booking is separate from coaching enrollment. Share your preferred timing — confirmation is pending until Joanna responds.
+        Consultation booking is separate from coaching enrollment. Share your preferred timing, confirmation is pending until Joanna responds.
       </p>
       <Field label="Name" error={requestForm.formState.errors.name?.message}>
         <input className="input-field" {...requestForm.register("name")} />

@@ -69,7 +69,7 @@ export function ContactForm() {
         {isSubmitting ? "Sending…" : "Send message"}
       </Button>
       {status === "success" && (
-        <p role="status" className="text-sm text-power-black">Thank you — your message was received.</p>
+        <p role="status" className="text-sm text-power-black">Thank you, your message was received.</p>
       )}
       {status === "error" && (
         <p role="alert" className="text-sm text-hot-fuchsia">Something went wrong. Please try again.</p>

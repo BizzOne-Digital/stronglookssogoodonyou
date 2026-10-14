@@ -109,7 +109,7 @@ function formatSlotLabel(start: Date, end: Date, tz: string): string {
       hour: "numeric",
       minute: "2-digit",
     });
-    return `${fmt.format(start)} – ${fmtEnd.format(end)} (${tz})`;
+    return `${fmt.format(start)} to ${fmtEnd.format(end)} (${tz})`;
   } catch {
     return start.toISOString();
   }

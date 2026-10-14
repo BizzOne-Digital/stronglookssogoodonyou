@@ -4,6 +4,7 @@ import { PageCta } from "@/components/ui/PageCta";
 import { getPublicGalleryImages } from "@/lib/data/public";
 import { STATIC_GALLERY_IMAGES } from "@/lib/gallery-static";
 import { SITE_IMAGES } from "@/lib/site-images";
+import { WorkoutVideo } from "@/components/media/WorkoutVideo";
 
 export const metadata = { title: "Gallery" };
 
@@ -20,9 +21,14 @@ export default async function GalleryPage() {
       <PageHero
         label="GALLERY"
         title="Editorial moments"
-        description="Training, competition, portraits, and brand imagery from Joanna Michel's journey—on stage, in the gym, and behind the scenes of STRONG LOOKS GOOD ON YOU™."
+        description="Training, competition, portraits, and brand imagery from Joanna Michel's journey, on stage, in the gym, and behind the scenes of STRONG LOOKS GOOD ON YOU™."
         imageSrc={images[0]?.src ?? STATIC_GALLERY_IMAGES[0]?.src ?? SITE_IMAGES.gymPowerRack}
         imageAlt="Joanna Michel on competition stage"
+      />
+      <WorkoutVideo
+        dark
+        title="In the gym"
+        lead="Watch a training clip from Joanna's own workouts, and the energy and intention behind STRONG LOOKS GOOD ON YOU™ coaching."
       />
       <section className="bg-power-black py-16 text-clean-white md:py-20">
         <div className="mx-auto max-w-7xl px-4 md:px-8">

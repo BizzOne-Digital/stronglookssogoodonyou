@@ -22,13 +22,13 @@ export default async function TestimonialsPage() {
       <PageHero
         label="STORIES"
         title="Client stories"
-        description="Real words from women who have opted to share their coaching experience—with consent and approval before anything is published here. We do not post fabricated reviews or unverified transformation claims."
+        description="Real words from women who have opted to share their coaching experience, with consent and approval before anything is published here. We do not post fabricated reviews or unverified transformation claims."
         imageSrc={SITE_IMAGES.stageSpotlights}
         imageAlt="Spotlight on client success stories"
       />
       <SectionImageBand src={SITE_IMAGES.gymWide} alt="Training environment" />
       <ContentSection
-        lead="Every story reflects an individual journey. Results vary with consistency, circumstances, and adherence. These testimonials are shared to highlight experience and support—not to promise identical outcomes."
+        lead="Every story reflects an individual journey. Results vary with consistency, circumstances, and adherence. These testimonials are shared to highlight experience and support, not to promise identical outcomes."
       />
       <section className="bg-clean-white py-16 md:py-24">
         <div className="mx-auto max-w-4xl px-4 md:px-8">

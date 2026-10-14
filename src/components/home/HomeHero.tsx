@@ -88,7 +88,7 @@ export function HomeHero() {
           <div className="flex items-center gap-4">
             <span className="hidden h-px w-14 bg-white/90 sm:block" aria-hidden />
             <p className="font-body text-[0.58rem] font-medium uppercase tracking-[0.32em] text-white/90 sm:text-[0.62rem]">
-              1:1 STRENGTH &amp; PHYSIQUE COACHING
+              1 ON 1 STRENGTH &amp; PHYSIQUE COACHING
             </p>
           </div>
           <a

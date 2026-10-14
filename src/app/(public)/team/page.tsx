@@ -34,7 +34,7 @@ export default async function TeamPage() {
         name: "Joanna Michel",
         role: "Founder & Coach",
         bio:
-          "Competitive bodybuilding athlete and coach behind STRONG LOOKS GOOD ON YOU™. Joanna leads programming, check-ins, and client communication for coaching clients—bringing purposeful strength training, accountability, and sustainable habits to women online worldwide.",
+          "Competitive bodybuilding athlete and coach behind STRONG LOOKS GOOD ON YOU™. Joanna leads programming, check ins, and client communication for coaching clients, bringing purposeful strength training, accountability, and sustainable habits to women online worldwide.",
         photo: PLACEHOLDER_IMAGES.aboutPortrait,
       },
     ];
@@ -45,7 +45,7 @@ export default async function TeamPage() {
       <PageHero
         label="TEAM"
         title="The people behind the brand"
-        description={`${BRAND.name} is founder-led today—with room to grow. Team profiles are managed in admin so future coaches or collaborators can be added with photos, roles, and bios when the business expands.`}
+        description={`${BRAND.name} is founder led today, with room to grow. Team profiles are managed in admin so future coaches or collaborators can be added with photos, roles, and bios when the business expands.`}
         dark
       />
       <section className="bg-power-black py-20 text-clean-white md:py-28">
@@ -75,7 +75,7 @@ export default async function TeamPage() {
       <ContentSection
         label="GROWING INTENTIONALLY"
         title="One team, strong foundation"
-        lead="Even with a single listed coach, this page is designed to feel complete—not empty. When new team members join, their stories will appear here in the order set in admin."
+        lead="Even with a single listed coach, this page is designed to feel complete, not empty. When new team members join, their stories will appear here in the order set in admin."
       >
         <p>
           Interested in coaching with Joanna? Start with the application or book a consultation to discuss goals and package fit.

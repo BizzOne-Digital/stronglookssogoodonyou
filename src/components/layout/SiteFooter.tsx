@@ -43,7 +43,7 @@ export function SiteFooter({ tagline }: { tagline?: string }) {
             </p>
             <p className="max-w-sm text-sm leading-relaxed text-soft-silver">
               {tagline ||
-                "Strength, discipline, confidence—and becoming the strongest version of yourself."}
+                "Strength, discipline, confidence, and becoming the strongest version of yourself."}
             </p>
             <Link
               href="/apply"
@@ -91,7 +91,7 @@ export function SiteFooter({ tagline }: { tagline?: string }) {
           <div className="lg:col-span-4 lg:pt-2">
             <p className="font-display text-[0.65rem] tracking-[0.35em] text-hot-fuchsia">CONNECT</p>
             <p className="mt-5 text-sm leading-relaxed text-soft-silver">
-              Online coaching for women worldwide. Questions before you apply? Reach out—we&apos;re here to help you find the right fit.
+              Online coaching for women worldwide. Questions before you apply? Reach out, we&apos;re here to help you find the right fit.
             </p>
             <div className="mt-6 space-y-4 border border-white/10 bg-white/[0.03] p-5">
               <div>
@@ -124,7 +124,7 @@ export function SiteFooter({ tagline }: { tagline?: string }) {
         <div className="mx-auto flex max-w-[1600px] flex-col items-center justify-between gap-4 px-6 py-6 text-center text-[0.65rem] uppercase tracking-[0.2em] text-soft-silver md:flex-row md:px-10 lg:px-14">
           <p>© 2026 {BRAND.name}. All rights reserved.</p>
           <p className="normal-case tracking-normal text-soft-silver/80">
-            1:1 strength &amp; physique coaching · Online
+            1 on 1 strength &amp; physique coaching · Online
           </p>
         </div>
       </div>

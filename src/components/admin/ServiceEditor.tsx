@@ -75,7 +75,7 @@ export function ServiceEditor({ initial }: { initial?: ServiceData }) {
       ))}
       <div>
         <label className="text-xs uppercase">Description</label>
-        <p className="text-xs text-black/50">Plain text only — no HTML tags.</p>
+        <p className="text-xs text-black/50">Plain text only. No HTML tags.</p>
         <textarea
           className="input-field"
           rows={4}

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { HomeMotion } from "@/components/home/HomeMotion";
 import { HomeHero } from "@/components/home/HomeHero";
+import { InsideFitnessMagazine } from "@/components/about/InsideFitnessMagazine";
 import { MeetJoannaBio } from "@/components/about/MeetJoannaBio";
 import { HomeGalleryPreview } from "@/components/home/HomeGalleryPreview";
 import { SITE_IMAGES } from "@/lib/site-images";
@@ -33,6 +34,8 @@ export function HomePageContent({
       <HomeHero />
 
       <MeetJoannaBio />
+
+      <InsideFitnessMagazine />
 
       <section
         id="next-section"

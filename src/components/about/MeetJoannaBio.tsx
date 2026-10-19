@@ -37,7 +37,7 @@ export function MeetJoannaBio({
         <div className="md:col-span-7">
           <p className={`font-display text-xs tracking-[0.4em] ${headingAccent}`}>ABOUT</p>
           <h2 className="mt-3 font-display text-3xl uppercase tracking-tight md:text-4xl lg:text-5xl">
-            Meet Joanna Michel
+            Meet <strong className={dark ? "text-clean-white" : "text-power-black"}>Joanna Michel</strong>
           </h2>
 
           <div className={`mt-8 space-y-6 text-base leading-relaxed md:text-lg ${body}`}>
@@ -53,9 +53,13 @@ export function MeetJoannaBio({
               <strong className={dark ? "text-clean-white" : "text-power-black"}>
                 2nd place in the Top Five at Canada&apos;s Natural Pro Qualifier on August 2, 2026
               </strong>
-              , and an{" "}
+              , an{" "}
               <strong className={dark ? "text-clean-white" : "text-power-black"}>
                 Overall Masters 35+ title in 2026
+              </strong>
+              , and press features including{" "}
+              <strong className={dark ? "text-clean-white" : "text-power-black"}>
+                Inside Fitness magazine
               </strong>
               .
             </p>

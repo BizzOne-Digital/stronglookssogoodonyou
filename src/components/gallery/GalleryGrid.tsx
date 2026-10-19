@@ -8,6 +8,10 @@ import {
   presentationClasses,
   type PresentationKind,
 } from "@/lib/image-presentations";
+import {
+  filterImagesForGalleryPage,
+  galleryImageFilename,
+} from "@/lib/gallery-static";
 
 export type GalleryImage = {
   id: string;
@@ -24,8 +28,15 @@ export function GalleryGrid({ images }: { images: GalleryImage[] }) {
 
   const categories = ["All", ...Array.from(new Set(images.map((i) => i.category)))];
 
+  const uniqueImages = filterImagesForGalleryPage(
+    images.filter((img, index, list) => {
+      const key = galleryImageFilename(img.src);
+      return list.findIndex((other) => galleryImageFilename(other.src) === key) === index;
+    })
+  );
+
   const filtered =
-    filter === "All" ? images : images.filter((i) => i.category === filter);
+    filter === "All" ? uniqueImages : uniqueImages.filter((i) => i.category === filter);
 
   const close = useCallback(() => setActive(null), []);
   const prev = useCallback(() => {

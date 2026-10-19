@@ -13,6 +13,8 @@ import { resolvePublicImageSrcOrEmpty } from "@/lib/image-url";
 import type { IService } from "@/models/Service";
 import type { PresentationKind } from "@/lib/image-presentations";
 import {
+  filterImagesForGalleryPage,
+  galleryImageFilename,
   getHomeCompetitionGalleryPreview,
   HOME_GALLERY_PREVIEW,
   STATIC_GALLERY_IMAGES,
@@ -156,21 +158,40 @@ function mapDbGalleryToImages(
     .filter(Boolean) as PublicGalleryImage[];
 }
 
+function dedupeGalleryImages(images: PublicGalleryImage[]): PublicGalleryImage[] {
+  const seen = new Set<string>();
+  return images.filter((img) => {
+    const key = galleryImageFilename(img.src);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+function prepareGalleryPageImages(images: PublicGalleryImage[]): PublicGalleryImage[] {
+  return filterImagesForGalleryPage(dedupeGalleryImages(images));
+}
+
 /** Published gallery images from Mongo, or static files when DB is empty. */
 export async function getPublicGalleryImages(): Promise<PublicGalleryImage[]> {
   try {
-    const mapped = sortGalleryImages(mapDbGalleryToImages(await getPublicGallery()));
+    const mapped = prepareGalleryPageImages(
+      sortGalleryImages(mapDbGalleryToImages(await getPublicGallery()))
+    );
     if (mapped.length > 0) return mapped;
   } catch {
     // Mongo unavailable
   }
-  return STATIC_GALLERY_IMAGES.map((img) => ({
-    id: img.id,
-    src: img.src,
-    alt: img.alt,
-    caption: img.caption,
-    category: img.category,
-  }));
+  return prepareGalleryPageImages(
+    STATIC_GALLERY_IMAGES.map((img) => ({
+      id: img.id,
+      src: img.src,
+      alt: img.alt,
+      caption: img.caption,
+      category: img.category,
+      presentation: img.presentation,
+    }))
+  );
 }
 
 function homeCompetitionPreviewStatic(): PublicGalleryImage[] {

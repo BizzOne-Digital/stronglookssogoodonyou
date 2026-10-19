@@ -131,6 +131,28 @@ export const GALLERY_CATEGORY_ORDER = [
   "Training",
 ] as const;
 
+/** Not shown on /gallery (duplicate lineup + solo stage; still used on home preview). */
+const GALLERY_PAGE_EXCLUDED_STATIC_IDS = new Set(["static-10", "static-13"]);
+
+const GALLERY_PAGE_EXCLUDED_FILENAMES = new Set([
+  "10-competition-lineup.jpg",
+  "13-competition-canfitpro-stage.jpg",
+]);
+
+export function galleryImageFilename(src: string): string {
+  return (src.split("?")[0]?.split("/").pop() ?? src).toLowerCase();
+}
+
+export function filterImagesForGalleryPage<T extends { id: string; src: string }>(
+  images: T[]
+): T[] {
+  return images.filter((img) => {
+    if (GALLERY_PAGE_EXCLUDED_STATIC_IDS.has(img.id)) return false;
+    const file = galleryImageFilename(img.src);
+    return !GALLERY_PAGE_EXCLUDED_FILENAMES.has(file);
+  });
+}
+
 export function sortGalleryImages<T extends { category: string; order?: number }>(
   images: T[]
 ): T[] {

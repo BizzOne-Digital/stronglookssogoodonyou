@@ -55,7 +55,7 @@ export function HomeGalleryPreview({ images }: { images: PublicGalleryImage[] })
               On stage &amp; in the gym
             </h2>
             <p className="mt-4 max-w-xl text-power-black/75">
-              Personal training moments and competition highlights from Joanna&apos;s journey. See the full collection on the gallery page.
+              Portraits, gym sessions, national pro qualifier moments, and backstage on show day — highlights from Joanna&apos;s journey. See the full collection on the gallery page.
             </p>
           </div>
           <Button href="/gallery" variant="secondary" className="shrink-0 self-start md:self-auto">

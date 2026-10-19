@@ -53,6 +53,30 @@ export const STATIC_GALLERY_IMAGES: GalleryImage[] = [
     presentation: "ambient",
   },
   {
+    id: "static-14",
+    src: `${base}/14-pro-qualifier-top-five.jpg`,
+    alt: "Joanna Michel with Canada's national pro qualifier top five on stage",
+    category: "Competition",
+    caption: "National pro qualifier, top five",
+    presentation: "ambient",
+  },
+  {
+    id: "static-15",
+    src: `${base}/15-competition-backstage.jpg`,
+    alt: "Joanna Michel backstage at a physique competition with fellow athletes",
+    category: "Competition",
+    caption: "Backstage, show day",
+    presentation: "competition",
+  },
+  {
+    id: "static-16",
+    src: `${base}/13-portrait-tropical.jpg`,
+    alt: "Joanna Michel portrait outdoors",
+    category: "Portraits",
+    caption: "Portrait",
+    presentation: "personal",
+  },
+  {
     id: "static-04",
     src: `${base}/04-portraits-editorial.png`,
     alt: "Joanna Michel editorial fitness portrait",
@@ -102,8 +126,8 @@ export const STATIC_GALLERY_IMAGES: GalleryImage[] = [
   },
 ];
 
-const HOME_PREVIEW_PERSONAL = ["static-06", "static-04", "static-08", "static-09"] as const;
-const HOME_PREVIEW_COMPETITION = ["static-12", "static-13"] as const;
+const HOME_PREVIEW_PERSONAL = ["static-16", "static-06", "static-04", "static-08"] as const;
+const HOME_PREVIEW_COMPETITION = ["static-14", "static-15"] as const;
 
 export const HOME_GALLERY_PREVIEW = [
   ...HOME_PREVIEW_PERSONAL,
@@ -131,7 +155,7 @@ export const GALLERY_CATEGORY_ORDER = [
   "Training",
 ] as const;
 
-/** Not shown on /gallery (duplicate lineup + solo stage; still used on home preview). */
+/** Not shown on /gallery (duplicate lineup + solo canfitpro stage). */
 const GALLERY_PAGE_EXCLUDED_STATIC_IDS = new Set(["static-10", "static-13"]);
 
 const GALLERY_PAGE_EXCLUDED_FILENAMES = new Set([

@@ -25,8 +25,8 @@ export const PACKAGE_IMAGES_BY_SLUG: Record<string, PackageImage> = {
     presentation: "ambient",
   },
   "bodybuilding-competition-prep": {
-    src: "/images/packages/bodybuilding-competition-prep.jpg",
-    alt: "Joanna Michel posing on stage at the canfitpro natural championship",
+    src: "/images/gallery/14-pro-qualifier-top-five.jpg",
+    alt: "Joanna Michel with Canada's national pro qualifier top five on stage",
     presentation: "ambient",
   },
 };

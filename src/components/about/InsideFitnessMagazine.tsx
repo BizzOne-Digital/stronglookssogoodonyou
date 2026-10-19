@@ -1,6 +1,15 @@
 import Image from "next/image";
 import { INSIDE_FITNESS_PRESS } from "@/lib/press-images";
 
+const PRESS_TILES = [
+  INSIDE_FITNESS_PRESS.cover,
+  ...INSIDE_FITNESS_PRESS.editorial,
+];
+
+/** Shared tile height — all press images match (home + about). */
+const TILE_CLASS =
+  "relative h-[22rem] w-full overflow-hidden bg-power-black/5 sm:h-[20rem] md:h-[24rem] lg:h-[28rem]";
+
 export function InsideFitnessMagazine({ dark = false }: { dark?: boolean }) {
   const bg = dark ? "bg-power-black text-clean-white" : "bg-clean-white text-power-black";
   const body = dark ? "text-soft-silver" : "text-power-black/80";
@@ -21,34 +30,19 @@ export function InsideFitnessMagazine({ dark = false }: { dark?: boolean }) {
           editorial photography celebrating strength, physique, and confidence.
         </p>
 
-        <div className="mt-12 grid gap-6 lg:grid-cols-12 lg:items-start lg:gap-8">
-          <div className="relative mx-auto aspect-[3/4] w-full max-w-sm overflow-hidden bg-power-black/5 lg:col-span-5 lg:mx-0 lg:max-w-none">
-            <Image
-              src={INSIDE_FITNESS_PRESS.cover.src}
-              alt={INSIDE_FITNESS_PRESS.cover.alt}
-              fill
-              className="object-cover object-top"
-              sizes="(max-width:1024px) 90vw, 40vw"
-              quality={92}
-            />
-          </div>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:col-span-7">
-            {INSIDE_FITNESS_PRESS.editorial.map((img) => (
-              <div
-                key={img.src}
-                className="relative aspect-[4/5] overflow-hidden bg-power-black/5"
-              >
-                <Image
-                  src={img.src}
-                  alt={img.alt}
-                  fill
-                  className="object-cover object-center"
-                  sizes="(max-width:640px) 100vw, 35vw"
-                  quality={90}
-                />
-              </div>
-            ))}
-          </div>
+        <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-6">
+          {PRESS_TILES.map((img) => (
+            <div key={img.src} className={TILE_CLASS}>
+              <Image
+                src={img.src}
+                alt={img.alt}
+                fill
+                className="object-cover object-center"
+                sizes="(max-width:640px) 100vw, 33vw"
+                quality={90}
+              />
+            </div>
+          ))}
         </div>
       </div>
     </section>

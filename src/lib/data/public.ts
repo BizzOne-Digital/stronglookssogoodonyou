@@ -14,9 +14,11 @@ import type { IService } from "@/models/Service";
 import type { PresentationKind } from "@/lib/image-presentations";
 import {
   filterImagesForGalleryPage,
+  galleryDedupeKey,
   galleryImageFilename,
   getHomeCompetitionGalleryPreview,
   HOME_GALLERY_PREVIEW,
+  lineupGalleryRank,
   STATIC_GALLERY_IMAGES,
   sortGalleryImages,
 } from "@/lib/gallery-static";
@@ -160,12 +162,22 @@ function mapDbGalleryToImages(
 
 function dedupeGalleryImages(images: PublicGalleryImage[]): PublicGalleryImage[] {
   const seen = new Set<string>();
-  return images.filter((img) => {
-    const key = galleryImageFilename(img.src);
-    if (seen.has(key)) return false;
+  const ordered = [...images].sort(
+    (a, b) => lineupGalleryRank(a.src) - lineupGalleryRank(b.src)
+  );
+  const result: PublicGalleryImage[] = [];
+  const seenAlt = new Set<string>();
+  for (const img of ordered) {
+    const key = galleryDedupeKey(img.src, img.id);
+    if (seen.has(key)) continue;
+    const altKey =
+      img.category === "Competition" ? img.alt.trim().toLowerCase() : "";
+    if (altKey && seenAlt.has(altKey)) continue;
     seen.add(key);
-    return true;
-  });
+    if (altKey) seenAlt.add(altKey);
+    result.push(img);
+  }
+  return result;
 }
 
 function prepareGalleryPageImages(images: PublicGalleryImage[]): PublicGalleryImage[] {

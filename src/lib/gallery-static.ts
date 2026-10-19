@@ -139,8 +139,39 @@ const GALLERY_PAGE_EXCLUDED_FILENAMES = new Set([
   "13-competition-canfitpro-stage.jpg",
 ]);
 
+/** Skip seeding these into Mongo gallery (home preview still uses static paths). */
+export const GALLERY_SEED_SKIP_SRC = new Set([
+  "/images/gallery/10-competition-lineup.jpg",
+  "/images/gallery/13-competition-canfitpro-stage.jpg",
+]);
+
+const LINEUP_GALLERY_FILENAMES = [
+  "10-competition-lineup.jpg",
+  "12-competition-natural-canada-lineup.jpg",
+] as const;
+
 export function galleryImageFilename(src: string): string {
   return (src.split("?")[0]?.split("/").pop() ?? src).toLowerCase();
+}
+
+/** One gallery tile for Toronto / Natural Canada lineup variants (Mongo + static). */
+export function galleryDedupeKey(src: string, id: string): string {
+  const file = galleryImageFilename(src);
+  if (
+    LINEUP_GALLERY_FILENAMES.some((name) => file === name) ||
+    file.includes("lineup")
+  ) {
+    return "competition-lineup-slot";
+  }
+  return file || id;
+}
+
+export function lineupGalleryRank(src: string): number {
+  const file = galleryImageFilename(src);
+  if (file === "12-competition-natural-canada-lineup.jpg") return 0;
+  if (file === "10-competition-lineup.jpg") return 1;
+  if (file.includes("lineup")) return 2;
+  return 3;
 }
 
 export function filterImagesForGalleryPage<T extends { id: string; src: string }>(

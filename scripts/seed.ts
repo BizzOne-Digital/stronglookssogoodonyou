@@ -12,7 +12,10 @@ import { AvailabilitySettings } from "../src/models/Availability";
 import { MediaAsset } from "../src/models/MediaAsset";
 import { GalleryItem } from "../src/models/GalleryItem";
 import { Testimonial } from "../src/models/Testimonial";
-import { STATIC_GALLERY_IMAGES } from "../src/lib/gallery-static";
+import {
+  GALLERY_SEED_SKIP_SRC,
+  STATIC_GALLERY_IMAGES,
+} from "../src/lib/gallery-static";
 import { PACKAGE_IMAGES_BY_SLUG } from "../src/lib/service-images";
 
 const PACKAGE_TERMS = `All prices are in CAD and paid upfront.
@@ -359,6 +362,15 @@ async function seed() {
 
   let galleryOrder = 0;
   for (const img of STATIC_GALLERY_IMAGES) {
+    if (GALLERY_SEED_SKIP_SRC.has(img.src)) {
+      const stale = await MediaAsset.findOne({
+        $or: [{ url: img.src }, { secureUrl: img.src }],
+      });
+      if (stale) {
+        await GalleryItem.deleteMany({ mediaId: stale._id });
+      }
+      continue;
+    }
     const publicId = `local${img.src.replace(/[^a-zA-Z0-9]+/g, "_")}`;
     const media = await MediaAsset.findOneAndUpdate(
       { cloudinaryPublicId: publicId },

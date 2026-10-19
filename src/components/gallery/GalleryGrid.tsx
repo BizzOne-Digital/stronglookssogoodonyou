@@ -10,7 +10,8 @@ import {
 } from "@/lib/image-presentations";
 import {
   filterImagesForGalleryPage,
-  galleryImageFilename,
+  galleryDedupeKey,
+  lineupGalleryRank,
 } from "@/lib/gallery-static";
 
 export type GalleryImage = {
@@ -28,11 +29,16 @@ export function GalleryGrid({ images }: { images: GalleryImage[] }) {
 
   const categories = ["All", ...Array.from(new Set(images.map((i) => i.category)))];
 
+  const seen = new Set<string>();
   const uniqueImages = filterImagesForGalleryPage(
-    images.filter((img, index, list) => {
-      const key = galleryImageFilename(img.src);
-      return list.findIndex((other) => galleryImageFilename(other.src) === key) === index;
-    })
+    [...images]
+      .sort((a, b) => lineupGalleryRank(a.src) - lineupGalleryRank(b.src))
+      .filter((img) => {
+        const key = galleryDedupeKey(img.src, img.id);
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      })
   );
 
   const filtered =

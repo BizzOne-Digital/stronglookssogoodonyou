@@ -1,6 +1,7 @@
 import { PageHero } from "@/components/ui/PageHero";
 import { InsideFitnessMagazine } from "@/components/about/InsideFitnessMagazine";
 import { MeetJoannaBio } from "@/components/about/MeetJoannaBio";
+import { JoannaJourneyAchievements } from "@/components/about/JoannaJourneyAchievements";
 import { ContentSection, ProseList } from "@/components/ui/ContentSection";
 import { PageCta } from "@/components/ui/PageCta";
 import { Button } from "@/components/ui/Button";
@@ -22,6 +23,8 @@ export default function AboutPage() {
       />
 
       <MeetJoannaBio dark showCta={false} />
+
+      <JoannaJourneyAchievements dark />
 
       <InsideFitnessMagazine dark />
 

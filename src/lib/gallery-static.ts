@@ -54,7 +54,7 @@ export const STATIC_GALLERY_IMAGES: GalleryImage[] = [
   },
   {
     id: "static-14",
-    src: `${base}/14-pro-qualifier-top-five.jpg`,
+    src: `${base}/14-pro-qualifier-top-five.png`,
     alt: "Joanna Michel with Canada's national pro qualifier top five on stage",
     category: "Competition",
     caption: "National pro qualifier, top five",

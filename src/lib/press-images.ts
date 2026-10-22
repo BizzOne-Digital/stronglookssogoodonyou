@@ -1,8 +1,8 @@
 /** Inside Fitness magazine feature assets (client-provided). */
 export const INSIDE_FITNESS_PRESS = {
   cover: {
-    src: "/images/press/inside-fitness-cover.jpg",
-    alt: "Inside Fitness magazine cover featuring Joanna Michel",
+    src: "/images/press/inside-fitness-cover.png",
+    alt: "Inside Fitness Hot & Fit 100 feature — Joanna Michel",
   },
   editorial: [
     {

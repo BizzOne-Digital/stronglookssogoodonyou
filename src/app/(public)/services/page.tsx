@@ -1,11 +1,11 @@
 import { PageHero } from "@/components/ui/PageHero";
 import { Button } from "@/components/ui/Button";
-import { FramedImage } from "@/components/ui/FramedImage";
 import { getPublicServices, getSiteSettings } from "@/lib/data/public";
 import { SITE_IMAGES } from "@/lib/site-images";
 import { PlainTextContent } from "@/components/ui/PlainTextContent";
 import { adminTextToPlain } from "@/lib/admin-text";
-import { resolvePackageImage } from "@/lib/service-images";
+import { resolvePackageGallery } from "@/lib/service-images";
+import { PackageImageGrid } from "@/components/services/PackageImageGrid";
 
 export const metadata = { title: "Coaching Services" };
 
@@ -35,7 +35,7 @@ export default async function ServicesPage() {
       <section className="bg-power-black pb-24 pt-16 text-clean-white md:pt-20">
         <div className="mx-auto max-w-7xl space-y-20 px-4 md:px-8">
           {services.map((svc) => {
-            const pkgImage = resolvePackageImage(svc.slug, svc.imageUrl, svc.name);
+            const pkgImages = resolvePackageGallery(svc.slug, svc.imageUrl, svc.name);
             return (
               <article
                 key={svc.id}
@@ -53,11 +53,8 @@ export default async function ServicesPage() {
                   </p>
                 </div>
                 <div className="md:col-span-7 md:row-span-1">
-                  <FramedImage
-                    src={pkgImage.src}
-                    alt={pkgImage.alt}
-                    presentation={pkgImage.presentation}
-                    className="w-full"
+                  <PackageImageGrid
+                    images={pkgImages}
                     sizes="(max-width:768px) 100vw, 50vw"
                   />
                 </div>

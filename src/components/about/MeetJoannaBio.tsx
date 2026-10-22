@@ -1,20 +1,26 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
-import { BRAND } from "@/lib/constants";
+import { JOANNA_INTRO_PARAGRAPHS, JOANNA_TAGLINE } from "@/lib/joanna-story";
 
 export const JOANNA_PORTRAIT = "/images/joanna-michel.jpg";
 
 export function MeetJoannaBio({
   dark = false,
   showCta = true,
+  condensed = false,
 }: {
   dark?: boolean;
   showCta?: boolean;
+  /** Home: shorter intro; About uses full client paragraphs. */
+  condensed?: boolean;
 }) {
   const bg = dark ? "bg-power-black text-clean-white" : "bg-clean-white text-power-black";
   const body = dark ? "text-soft-silver" : "text-power-black/80";
   const headingAccent = "text-hot-fuchsia";
+  const paragraphs = condensed
+    ? JOANNA_INTRO_PARAGRAPHS.slice(0, 1)
+    : JOANNA_INTRO_PARAGRAPHS;
 
   return (
     <section className={`${bg} py-16 md:py-24`}>
@@ -39,43 +45,28 @@ export function MeetJoannaBio({
           <h2 className="mt-3 font-display text-3xl uppercase tracking-tight md:text-4xl lg:text-5xl">
             Meet <strong className={dark ? "text-clean-white" : "text-power-black"}>Joanna Michel</strong>
           </h2>
+          <p className={`mt-4 text-sm font-semibold uppercase tracking-[0.15em] ${headingAccent} md:text-base`}>
+            {JOANNA_TAGLINE}
+          </p>
 
           <div className={`mt-8 space-y-6 text-base leading-relaxed md:text-lg ${body}`}>
-            <p>
-              Joanna Michel is a competitive bodybuilding athlete and fitness professional whose fitness journey began in 2015. With experience spanning HIIT, strength training, obstacle racing, and competitive bodybuilding, Joanna brings a disciplined, progress-focused perspective to fitness.
-            </p>
-            <p>
-              Her competitive achievements include an{" "}
-              <strong className={dark ? "text-clean-white" : "text-power-black"}>
-                Overall Figure title in 2025
-              </strong>
-              ,{" "}
-              <strong className={dark ? "text-clean-white" : "text-power-black"}>
-                2nd place in the Top Five at Canada&apos;s Natural Pro Qualifier on August 2, 2026
-              </strong>
-              , an{" "}
-              <strong className={dark ? "text-clean-white" : "text-power-black"}>
-                Overall Masters 35+ title in 2026
-              </strong>
-              , and press features including{" "}
-              <strong className={dark ? "text-clean-white" : "text-power-black"}>
-                Inside Fitness magazine
-              </strong>
-              .
-            </p>
-            <p>
-              Through <strong className={dark ? "text-clean-white" : "text-power-black"}>{BRAND.name}</strong>, Joanna is building a fitness brand centered on strength, physique development, consistency, and confidence. Her mission is to help women at different stages of life take ownership of their fitness journeys and work toward stronger, more confident versions of themselves.
-            </p>
+            {paragraphs.map((p) => (
+              <p key={p.slice(0, 40)}>{p}</p>
+            ))}
           </div>
 
           <p className="mt-10 font-display text-lg uppercase leading-snug tracking-tight text-hot-fuchsia md:text-xl">
-            Build Your Strength. Define Your Physique. Own Your Confidence.
+            STRONG LOOKS GOOD ON YOU.
           </p>
 
           {showCta && (
             <div className="mt-10 flex flex-wrap gap-4">
-              <Button href="/about" variant={dark ? "secondary" : "primary"} className={dark ? "border-clean-white text-clean-white hover:bg-clean-white hover:text-power-black" : ""}>
-                Read Full Story
+              <Button
+                href={condensed ? "/about" : "/services"}
+                variant={dark ? "secondary" : "primary"}
+                className={dark ? "border-clean-white text-clean-white hover:bg-clean-white hover:text-power-black" : ""}
+              >
+                {condensed ? "Read full story" : "View packages"}
               </Button>
               <Link
                 href="/apply"

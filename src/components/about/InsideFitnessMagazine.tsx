@@ -22,12 +22,16 @@ export function InsideFitnessMagazine({ dark = false }: { dark?: boolean }) {
           Inside Fitness Magazine
         </h2>
         <p className={`mt-6 max-w-3xl text-base leading-relaxed md:text-lg ${body}`}>
-          Joanna was featured in{" "}
+          In 2026, Joanna was honoured as one of Canada&apos;s{" "}
+          <strong className={dark ? "text-clean-white" : "text-power-black"}>
+            Top 100 Hot &amp; Fit Women
+          </strong>{" "}
+          in{" "}
           <strong className={dark ? "text-clean-white" : "text-power-black"}>
             Inside Fitness
           </strong>{" "}
-          magazine, including the Hot &amp; Fit 100 issue, with a cover feature and professional
-          editorial photography celebrating strength, physique, and confidence.
+          magazine, with a feature cover and professional editorial photography celebrating
+          strength, physique, and confidence.
         </p>
 
         <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-6">
@@ -37,7 +41,7 @@ export function InsideFitnessMagazine({ dark = false }: { dark?: boolean }) {
                 src={img.src}
                 alt={img.alt}
                 fill
-                className="object-cover object-center"
+                className="object-cover object-top"
                 sizes="(max-width:640px) 100vw, 33vw"
                 quality={90}
               />

@@ -12,6 +12,7 @@ type Props = {
   sizes?: string;
   className?: string;
   quality?: number;
+  objectPosition?: string;
 };
 
 export function FramedImage({
@@ -22,8 +23,11 @@ export function FramedImage({
   sizes = "(max-width:768px) 100vw, 50vw",
   className = "",
   quality = 90,
+  objectPosition,
 }: Props) {
   const { aspect, frame, image } = presentationClasses(presentation);
+  const position = objectPosition ?? "object-center";
+  const imageClass = image.replace(/\bobject-(center|top|bottom|left|right)\b/g, "").trim();
 
   return (
     <div className={`relative ${aspect} ${frame} ${className}`}>
@@ -34,7 +38,7 @@ export function FramedImage({
         priority={priority}
         sizes={sizes}
         quality={quality}
-        className={image}
+        className={`${imageClass} ${position}`}
       />
     </div>
   );

@@ -9,8 +9,8 @@ import { HomeGalleryPreview } from "@/components/home/HomeGalleryPreview";
 import { SITE_IMAGES } from "@/lib/site-images";
 import type { PublicGalleryImage, PublicService } from "@/lib/data/public";
 import { adminTextToPlain } from "@/lib/admin-text";
-import { FramedImage } from "@/components/ui/FramedImage";
-import { resolvePackageImage } from "@/lib/service-images";
+import { resolvePackageGallery, resolvePackageImage } from "@/lib/service-images";
+import { PackageImageGrid } from "@/components/services/PackageImageGrid";
 import { WorkoutVideo } from "@/components/media/WorkoutVideo";
 
 type Props = {
@@ -33,7 +33,7 @@ export function HomePageContent({
     <HomeMotion>
       <HomeHero />
 
-      <MeetJoannaBio />
+      <MeetJoannaBio condensed />
 
       <InsideFitnessMagazine />
 
@@ -111,19 +111,19 @@ export function HomePageContent({
             className="flex w-max max-w-none gap-4 px-4 will-change-transform sm:gap-6 md:px-8 lg:gap-8 lg:py-1"
           >
             {services.map((svc) => {
+              const pkgImages = resolvePackageGallery(svc.slug, svc.imageUrl, svc.name);
               const pkgImage = resolvePackageImage(svc.slug, svc.imageUrl, svc.name);
+              const cardImages =
+                pkgImages.length > 1 ? [pkgImage] : pkgImages;
               return (
               <article
                 key={svc.id}
                 data-horizontal-card
                 className="flex w-[min(85vw,calc(100vw-2rem))] max-w-md shrink-0 flex-col overflow-hidden border border-white/15 bg-power-black md:w-[min(420px,38vw)]"
               >
-                <FramedImage
-                  src={pkgImage.src}
-                  alt={pkgImage.alt}
-                  presentation={pkgImage.presentation}
+                <PackageImageGrid
+                  images={cardImages}
                   sizes="(max-width:768px) 85vw, 420px"
-                  className="w-full shrink-0"
                 />
                 <div className="flex flex-1 flex-col p-5 sm:p-6">
                 <h3 className="font-display text-2xl uppercase leading-tight">{svc.name}</h3>

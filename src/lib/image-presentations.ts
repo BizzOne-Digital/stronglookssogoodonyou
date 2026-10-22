@@ -10,13 +10,13 @@ const PRESENTATION: Record<
     aspect: "aspect-[3/4]",
     frame: "overflow-hidden bg-power-black",
     image:
-      "object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]",
+      "object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]",
   },
   personal: {
     aspect: "aspect-[4/5]",
     frame: "overflow-hidden bg-power-black/5",
     image:
-      "object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]",
+      "object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]",
   },
   ambient: {
     aspect: "aspect-video",
@@ -32,4 +32,20 @@ export function presentationClasses(kind: PresentationKind) {
 export function categoryToPresentation(category: string): PresentationKind {
   if (category === "Competition") return "competition";
   return "personal";
+}
+
+type TileImage = { category: string; presentation?: PresentationKind };
+
+/** Grid / preview tiles — portraits get extra height so heads stay in frame. */
+export function galleryTilePresentation(img: TileImage) {
+  const kind = img.presentation ?? categoryToPresentation(img.category);
+  const base = presentationClasses(kind);
+  if (img.category === "Portraits") {
+    return {
+      ...base,
+      aspect: "aspect-[3/4]",
+      image: base.image.replace(/\bobject-(center|top|bottom)\b/g, "").trim() + " object-top",
+    };
+  }
+  return base;
 }

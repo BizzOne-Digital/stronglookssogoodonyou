@@ -33,9 +33,9 @@ export function SiteFooter({ tagline }: { tagline?: string }) {
               <Image
                 src={LOGO_IMAGE}
                 alt="STRONG LOOKS GOOD ON YOU"
-                width={140}
-                height={140}
-                className="h-16 w-16 object-contain md:h-[4.5rem] md:w-[4.5rem]"
+                width={168}
+                height={168}
+                className="h-[4.25rem] w-[4.25rem] object-contain md:h-20 md:w-20"
               />
             </Link>
             <p className="font-display text-xl uppercase leading-tight tracking-tight md:text-2xl">

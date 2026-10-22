@@ -2,14 +2,20 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import type { PublicGalleryImage } from "@/lib/data/public";
-import {
-  categoryToPresentation,
-  presentationClasses,
-} from "@/lib/image-presentations";
+import { galleryTilePresentation } from "@/lib/image-presentations";
 
-function PreviewTile({ img }: { img: PublicGalleryImage }) {
-  const kind = img.presentation ?? categoryToPresentation(img.category);
-  const { aspect, frame, image } = presentationClasses(kind);
+function PreviewTile({
+  img,
+  competitionRow = false,
+}: {
+  img: PublicGalleryImage;
+  competitionRow?: boolean;
+}) {
+  const tileImg =
+    competitionRow && img.category === "Competition"
+      ? { ...img, presentation: "competition" as const }
+      : img;
+  const { aspect, frame, image } = galleryTilePresentation(tileImg);
 
   return (
     <Link
@@ -77,9 +83,9 @@ export function HomeGalleryPreview({ images }: { images: PublicGalleryImage[] })
         {competition.length > 0 && (
           <div className="mt-10">
             <p className="font-display text-xs tracking-[0.35em] text-power-black/50">COMPETITION</p>
-            <div className="mt-4 grid grid-cols-2 gap-3 md:gap-4">
+            <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 md:gap-4">
               {competition.map((img) => (
-                <PreviewTile key={img.id} img={img} />
+                <PreviewTile key={img.id} img={img} competitionRow />
               ))}
             </div>
           </div>

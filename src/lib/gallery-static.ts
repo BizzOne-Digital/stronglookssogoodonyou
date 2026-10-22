@@ -58,7 +58,7 @@ export const STATIC_GALLERY_IMAGES: GalleryImage[] = [
     alt: "Joanna Michel with Canada's national pro qualifier top five on stage",
     category: "Competition",
     caption: "National pro qualifier, top five",
-    presentation: "ambient",
+    presentation: "competition",
   },
   {
     id: "static-15",
@@ -66,6 +66,14 @@ export const STATIC_GALLERY_IMAGES: GalleryImage[] = [
     alt: "Joanna Michel backstage at a physique competition with fellow athletes",
     category: "Competition",
     caption: "Backstage, show day",
+    presentation: "competition",
+  },
+  {
+    id: "static-17",
+    src: `${base}/16-competition-stage-solo.png`,
+    alt: "Joanna Michel posing on stage at a regional physique championship",
+    category: "Competition",
+    caption: "On stage",
     presentation: "competition",
   },
   {
@@ -127,7 +135,7 @@ export const STATIC_GALLERY_IMAGES: GalleryImage[] = [
 ];
 
 const HOME_PREVIEW_PERSONAL = ["static-16", "static-06", "static-04", "static-08"] as const;
-const HOME_PREVIEW_COMPETITION = ["static-14", "static-15"] as const;
+const HOME_PREVIEW_COMPETITION = ["static-14", "static-17"] as const;
 
 export const HOME_GALLERY_PREVIEW = [
   ...HOME_PREVIEW_PERSONAL,

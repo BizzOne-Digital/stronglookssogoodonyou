@@ -61,8 +61,8 @@ export const PACKAGE_GALLERY_BY_SLUG: Record<string, PackageImage[]> = {
       objectPosition: "object-top",
     },
     {
-      src: "/images/packages/bodybuilding-stage-solo.png",
-      alt: "Joanna Michel posing on stage at a national pro qualifier",
+      src: "/images/gallery/16-competition-stage-solo.png",
+      alt: "Joanna Michel posing on stage at a regional physique championship",
       presentation: "competition",
       objectPosition: "object-top",
     },

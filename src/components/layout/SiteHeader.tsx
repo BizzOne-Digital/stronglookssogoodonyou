@@ -54,9 +54,9 @@ function BrandLockup() {
       <Image
         src={LOGO_IMAGE}
         alt="STRONG LOOKS GOOD ON YOU"
-        width={160}
-        height={160}
-        className="h-11 w-11 object-contain sm:h-12 sm:w-12 md:h-[3.75rem] md:w-[3.75rem]"
+        width={192}
+        height={192}
+        className="h-12 w-12 object-contain sm:h-14 sm:w-14 md:h-[4.5rem] md:w-[4.5rem]"
         priority
       />
     </Link>

@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import {
   categoryToPresentation,
+  galleryTilePresentation,
   presentationClasses,
   type PresentationKind,
 } from "@/lib/image-presentations";
@@ -85,8 +86,7 @@ export function GalleryGrid({ images }: { images: GalleryImage[] }) {
       </div>
       <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {filtered.map((img, idx) => {
-          const kind = img.presentation ?? categoryToPresentation(img.category);
-          const { aspect, frame, image } = presentationClasses(kind);
+          const { aspect, frame, image } = galleryTilePresentation(img);
           return (
             <button
               key={img.id}
@@ -132,12 +132,7 @@ export function GalleryGrid({ images }: { images: GalleryImage[] }) {
                 src={filtered[active].src}
                 alt={filtered[active].alt}
                 fill
-                className={
-                  presentationClasses(
-                    filtered[active].presentation ??
-                      categoryToPresentation(filtered[active].category)
-                  ).image
-                }
+                className={galleryTilePresentation(filtered[active]).image}
                 sizes="90vw"
                 quality={92}
               />

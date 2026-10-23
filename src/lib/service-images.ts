@@ -46,12 +46,6 @@ export const PACKAGE_GALLERY_BY_SLUG: Record<string, PackageImage[]> = {
       presentation: "personal",
       objectPosition: "object-top",
     },
-    {
-      src: "/images/packages/lifestyle-gym-mirror.png",
-      alt: "Joanna Michel mirror selfie in a gym studio",
-      presentation: "personal",
-      objectPosition: "object-top",
-    },
   ],
   "bodybuilding-competition-prep": [
     {

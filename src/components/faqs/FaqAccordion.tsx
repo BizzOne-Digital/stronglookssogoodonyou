@@ -5,8 +5,10 @@ import { useState } from "react";
 
 export function FaqAccordion({
   items,
+  dark = false,
 }: {
   items: { id: string; question: string; answer: string; group: string }[];
+  dark?: boolean;
 }) {
   const groups = Array.from(new Set(items.map((i) => i.group)));
   const [open, setOpen] = useState<string | null>(null);
@@ -15,8 +17,14 @@ export function FaqAccordion({
     <div className="space-y-12">
       {groups.map((group) => (
         <div key={group}>
-          <h2 className="font-display text-sm tracking-[0.3em] text-hot-fuchsia">{group}</h2>
-          <ul className="mt-6 divide-y divide-power-black/10">
+          {group !== "FAQ" && (
+            <h2 className="font-display text-sm tracking-[0.3em] text-hot-fuchsia">{group}</h2>
+          )}
+          <ul
+            className={`mt-6 divide-y ${
+              dark ? "divide-white/10" : "divide-power-black/10"
+            }`}
+          >
             {items
               .filter((i) => i.group === group)
               .map((item) => {
@@ -25,7 +33,9 @@ export function FaqAccordion({
                   <li key={item.id}>
                     <button
                       type="button"
-                      className="flex w-full items-center justify-between gap-4 py-5 text-left font-display text-lg uppercase tracking-tight"
+                      className={`flex w-full items-center justify-between gap-4 py-5 text-left font-display text-lg uppercase tracking-tight ${
+                        dark ? "text-clean-white" : "text-power-black"
+                      }`}
                       aria-expanded={isOpen}
                       onClick={() => setOpen(isOpen ? null : item.id)}
                     >
@@ -33,7 +43,11 @@ export function FaqAccordion({
                       <span className="text-hot-fuchsia">{isOpen ? "−" : "+"}</span>
                     </button>
                     {isOpen && (
-                      <p className="pb-6 whitespace-pre-line text-power-black/75">
+                      <p
+                        className={`pb-6 whitespace-pre-line ${
+                          dark ? "text-soft-silver" : "text-power-black/75"
+                        }`}
+                      >
                         {adminTextToPlain(item.answer)}
                       </p>
                     )}

@@ -17,20 +17,9 @@ import {
   STATIC_GALLERY_IMAGES,
 } from "../src/lib/gallery-static";
 import { PACKAGE_IMAGES_BY_SLUG } from "../src/lib/service-images";
+import { STATIC_FAQS } from "../src/lib/faq-static";
 
-const PACKAGE_TERMS = `All prices are in CAD and paid upfront.
-
-Each package includes its listed services and check in frequency.
-
-Coaching communication takes place during defined business hours.
-
-Additional services may incur fees agreed upon in advance.
-
-Programs are tailored to individual goals, experience, and circumstances.
-
-Nutrition and competition guidance is within the coach's qualifications and professional scope.
-
-Results vary according to individual circumstances, consistency, and adherence.`;
+const PACKAGE_TERMS = `Package terms, payment, communication hours, and client responsibilities are listed on the FAQs page.`;
 
 const SERVICES = [
   {
@@ -123,72 +112,14 @@ const SERVICES = [
   },
 ];
 
-const FAQ_SEED = [
-  {
-    group: "Getting started",
-    question: "Is this coaching suitable if I'm a beginner?",
-    answer:
-      "Yes. Programs are tailored to your experience level, equipment access, and goals, whether you're starting from zero or returning after time away.",
-    published: true,
-    order: 1,
-  },
-  {
-    group: "Packages",
-    question: "How do I choose the right package?",
-    answer:
-      "Review the packages on the Services page and apply with your goals and timeline. If you're unsure, select \"Help me choose\" on the application and Joanna will recommend a fit after reviewing your needs.",
-    published: true,
-    order: 2,
-  },
-  {
-    group: "Online coaching",
-    question: "Is coaching delivered online?",
-    answer:
-      "Yes. STRONG LOOKS GOOD ON YOU™ is built around online coaching with structured training, check ins, and accountability, designed for women wherever they are.",
-    published: true,
-    order: 3,
-  },
-  {
-    group: "Pricing",
-    question: "Are prices listed in Canadian dollars?",
-    answer:
-      "Yes. Package pricing is stored in CAD. Display of prices on the public site is controlled in admin settings; you can apply for coaching at any time.",
-    published: true,
-    order: 4,
-  },
-  {
-    group: "Pricing",
-    question: "Is payment collected upfront?",
-    answer:
-      "Package terms specify that prices are in CAD and paid upfront. Confirm current payment details directly when your application is reviewed.",
-    published: true,
-    order: 5,
-  },
-  {
-    group: "Application",
-    question: "How do I apply for coaching?",
-    answer:
-      "Use the Apply for Coaching form to share your goals, experience, schedule, and package preference. You'll receive a confirmation that your submission was received.",
-    published: true,
-    order: 6,
-  },
-  {
-    group: "Equipment",
-    question: "What equipment do I need?",
-    answer: "This depends on your access and goals. Share what you have on the application so your program can be built accordingly.",
-    published: false,
-    isDraft: true,
-    order: 7,
-  },
-  {
-    group: "Nutrition",
-    question: "Is nutrition coaching included?",
-    answer: "",
-    published: false,
-    isDraft: true,
-    order: 8,
-  },
-];
+const FAQ_SEED = STATIC_FAQS.map((faq) => ({
+  group: faq.group,
+  question: faq.question,
+  answer: faq.answer,
+  published: true,
+  isDraft: false,
+  order: faq.order,
+}));
 
 async function seed() {
   await connectMongo();
@@ -234,11 +165,9 @@ async function seed() {
     );
   }
 
+  await FAQ.deleteMany({});
   for (const faq of FAQ_SEED) {
-    const exists = await FAQ.findOne({ question: faq.question });
-    if (!exists) {
-      await FAQ.create(faq);
-    }
+    await FAQ.create(faq);
   }
 
   const homeExists = await PageContent.findOne({ pageKey: "home" });

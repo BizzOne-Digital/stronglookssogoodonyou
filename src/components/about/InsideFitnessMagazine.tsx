@@ -34,7 +34,7 @@ export function InsideFitnessMagazine({ dark = false }: { dark?: boolean }) {
           strength, physique, and confidence.
         </p>
 
-        <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-6">
+        <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
           {PRESS_TILES.map((img) => (
             <div key={img.src} className={TILE_CLASS}>
               <Image

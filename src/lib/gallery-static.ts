@@ -124,14 +124,6 @@ export const STATIC_GALLERY_IMAGES: GalleryImage[] = [
     caption: "Recovery & confidence",
     presentation: "personal",
   },
-  {
-    id: "static-09",
-    src: `${base}/09-training-studio.jpg`,
-    alt: "Joanna Michel mirror photo in training studio",
-    category: "Training",
-    caption: "Studio session",
-    presentation: "personal",
-  },
 ];
 
 const HOME_PREVIEW_PERSONAL = ["static-16", "static-06", "static-04", "static-08"] as const;
@@ -169,6 +161,9 @@ const GALLERY_PAGE_EXCLUDED_STATIC_IDS = new Set(["static-10", "static-13"]);
 const GALLERY_PAGE_EXCLUDED_FILENAMES = new Set([
   "10-competition-lineup.jpg",
   "13-competition-canfitpro-stage.jpg",
+  "09-training-studio.jpg",
+  "lifestyle-studio-red.png",
+  "lifestyle-gym-mirror.png",
 ]);
 
 /** Skip seeding these into Mongo gallery (home preview still uses static paths). */

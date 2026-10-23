@@ -8,7 +8,7 @@ const PRESS_TILES = [
 
 /** Shared tile height — all press images match (home + about). */
 const TILE_CLASS =
-  "relative h-[22rem] w-full overflow-hidden bg-power-black/5 sm:h-[20rem] md:h-[24rem] lg:h-[28rem]";
+  "relative h-[32rem] w-full overflow-hidden bg-power-black/5 sm:h-[36rem] md:h-[42rem] lg:h-[46rem] xl:h-[50rem]";
 
 export function InsideFitnessMagazine({ dark = false }: { dark?: boolean }) {
   const bg = dark ? "bg-power-black text-clean-white" : "bg-clean-white text-power-black";

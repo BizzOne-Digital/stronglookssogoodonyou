@@ -127,16 +127,24 @@ export function GalleryGrid({ images }: { images: GalleryImage[] }) {
             ›
           </button>
           <div className="max-h-[85vh] max-w-5xl">
-            <div className="relative mx-auto max-h-[80vh] w-full max-w-4xl aspect-[3/4] overflow-hidden bg-power-black sm:aspect-[4/5]">
+            {(() => {
+              const activeImg = filtered[active];
+              const tile = galleryTilePresentation(activeImg);
+              return (
+            <div
+              className={`relative mx-auto max-h-[80vh] w-full max-w-4xl overflow-hidden ${tile.aspect} ${tile.frame}`}
+            >
               <Image
-                src={filtered[active].src}
-                alt={filtered[active].alt}
+                src={activeImg.src}
+                alt={activeImg.alt}
                 fill
-                className={galleryTilePresentation(filtered[active]).image}
+                className={tile.image}
                 sizes="90vw"
                 quality={92}
               />
             </div>
+              );
+            })()}
             {filtered[active].caption && (
               <p className="mt-4 text-center text-sm text-soft-silver">
                 {filtered[active].caption}

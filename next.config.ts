@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    return [{ source: "/favicon.ico", destination: "/favicon.jpg", permanent: true }];
+  },
   serverExternalPackages: ["mongoose", "mongodb", "bcryptjs"],
   cacheComponents: true,
   partialPrefetching: true,

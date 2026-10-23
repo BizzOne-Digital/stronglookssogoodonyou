@@ -28,8 +28,12 @@ export const metadata: Metadata = {
   description:
     "Personalized strength, physique, lifestyle, and bodybuilding coaching for women with Joanna Michel.",
   icons: {
-    icon: [{ url: LOGO_IMAGE, type: "image/jpeg" }],
+    icon: [
+      { url: "/favicon.jpg", type: "image/jpeg" },
+      { url: LOGO_IMAGE, type: "image/jpeg" },
+    ],
     apple: [{ url: LOGO_IMAGE, type: "image/jpeg" }],
+    shortcut: [{ url: "/favicon.jpg", type: "image/jpeg" }],
   },
 };
 

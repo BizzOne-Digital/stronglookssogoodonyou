@@ -9,7 +9,7 @@ export type PackageImage = {
   objectPosition?: string;
 };
 
-const POOL_LIFESTYLE = "/images/gallery/08-training-pool.jpg";
+const POOL_LIFESTYLE = "/images/packages/lifestyle-transformation.png";
 
 /** Default package imagery (admin imageUrl overrides when set). */
 export const PACKAGE_IMAGES_BY_SLUG: Record<string, PackageImage> = {

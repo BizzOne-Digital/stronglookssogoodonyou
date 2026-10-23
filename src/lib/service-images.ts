@@ -11,7 +11,7 @@ export type PackageImage = {
 
 const POOL_LIFESTYLE = "/images/packages/lifestyle-transformation.png";
 
-/** Default package imagery (admin imageUrl overrides when set). */
+/** Fallback package imagery when admin has not set imageUrl. */
 export const PACKAGE_IMAGES_BY_SLUG: Record<string, PackageImage> = {
   "physique-reset": {
     src: SITE_IMAGES.gymPowerRack,
@@ -37,7 +37,7 @@ export const PACKAGE_IMAGES_BY_SLUG: Record<string, PackageImage> = {
   },
 };
 
-/** Extra package photos shown on Services (client-provided). */
+/** Extra package photos on Services when admin has not set a custom primary image. */
 export const PACKAGE_GALLERY_BY_SLUG: Record<string, PackageImage[]> = {
   "lifestyle-transformation": [
     {
@@ -69,10 +69,17 @@ export function resolvePackageImage(
   name?: string
 ): PackageImage {
   const defaults = PACKAGE_IMAGES_BY_SLUG[slug];
-  if (
-    (slug === "bodybuilding-competition-prep" || slug === "lifestyle-transformation") &&
-    defaults
-  ) {
+
+  if (imageUrl?.trim()) {
+    return {
+      src: imageUrl,
+      alt: name || defaults?.alt || "Coaching package",
+      presentation: defaults?.presentation ?? "ambient",
+      objectPosition: defaults?.objectPosition,
+    };
+  }
+
+  if (defaults) {
     return {
       src: defaults.src,
       alt: defaults.alt,
@@ -80,20 +87,12 @@ export function resolvePackageImage(
       objectPosition: defaults.objectPosition,
     };
   }
-  if (imageUrl?.trim()) {
-    return {
-      src: imageUrl,
-      alt: name || defaults?.alt || "Coaching package",
-      presentation: defaults?.presentation ?? "ambient",
-    };
-  }
-  return (
-    defaults ?? {
-      src: SITE_IMAGES.gymWide,
-      alt: name || "Coaching package",
-      presentation: "ambient",
-    }
-  );
+
+  return {
+    src: SITE_IMAGES.gymWide,
+    alt: name || "Coaching package",
+    presentation: "ambient",
+  };
 }
 
 export function resolvePackageGallery(
@@ -101,10 +100,17 @@ export function resolvePackageGallery(
   imageUrl?: string | null,
   name?: string
 ): PackageImage[] {
-  const gallery = PACKAGE_GALLERY_BY_SLUG[slug];
-  if (gallery?.length) {
-    return gallery;
-  }
   const primary = resolvePackageImage(slug, imageUrl, name);
+  const extras = PACKAGE_GALLERY_BY_SLUG[slug] ?? [];
+
+  if (imageUrl?.trim()) {
+    const additional = extras.filter((img) => img.src !== primary.src);
+    return additional.length ? [primary, ...additional] : [primary];
+  }
+
+  if (extras.length) {
+    return extras;
+  }
+
   return [primary];
 }

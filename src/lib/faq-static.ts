@@ -15,6 +15,9 @@ export type StaticFaq = {
   order: number;
 };
 
+/** Public /faqs page — fixed list of 16 (do not add items here without client approval). */
+export const PUBLIC_FAQ_COUNT = 16;
+
 export const STATIC_FAQS: StaticFaq[] = [
   {
     id: "faq-1",
@@ -145,3 +148,7 @@ export const STATIC_FAQS: StaticFaq[] = [
       "Please contact Strong Looks Good On You through the website before purchasing. We encourage every prospective client to clarify expectations and confirm that the selected service meets their needs.",
   },
 ];
+
+if (STATIC_FAQS.length !== PUBLIC_FAQ_COUNT) {
+  throw new Error(`STATIC_FAQS must contain exactly ${PUBLIC_FAQ_COUNT} items.`);
+}

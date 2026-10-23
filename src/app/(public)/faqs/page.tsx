@@ -14,6 +14,7 @@ export default async function FaqsPage() {
     question: f.question,
     answer: f.answer,
     group: f.group,
+    order: f.order,
   }));
 
   return (
@@ -39,7 +40,7 @@ export default async function FaqsPage() {
       </section>
       <section className="bg-power-black py-20 text-clean-white md:py-28">
         <div className="mx-auto max-w-3xl px-4 md:px-8">
-          <FaqAccordion items={items} dark />
+          <FaqAccordion items={items} dark showNumbers />
           <p className="mt-16 border-t border-white/10 pt-10 text-center">
             <span className="font-display text-sm tracking-[0.3em] text-hot-fuchsia">
               {FAQ_INTRO.brand}

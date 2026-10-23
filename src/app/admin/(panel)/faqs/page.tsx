@@ -10,6 +10,12 @@ export default async function FaqsAdminPage() {
   return (
     <div>
       <h1 className="font-display text-3xl uppercase">FAQs</h1>
+      <p className="mt-4 max-w-2xl text-sm text-black/70">
+        The public <strong>/faqs</strong> page always shows the fixed{" "}
+        <strong>16 client-approved questions</strong> from{" "}
+        <code className="text-xs">src/lib/faq-static.ts</code>. Changes here do not
+        appear on the live FAQ page. Contact your developer to update that file.
+      </p>
       <FaqAdmin
         items={faqs.map((f) => ({
           id: f._id.toString(),

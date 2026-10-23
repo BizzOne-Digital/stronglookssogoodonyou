@@ -36,7 +36,14 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Missing file" }, { status: 400 });
   }
 
-  const mimeType = file.type;
+  let mimeType = file.type;
+  if (!UPLOAD_MIME_TYPES[mimeType]) {
+    const name = file.name.toLowerCase();
+    if (name.endsWith(".jpg") || name.endsWith(".jpeg")) mimeType = "image/jpeg";
+    else if (name.endsWith(".png")) mimeType = "image/png";
+    else if (name.endsWith(".webp")) mimeType = "image/webp";
+    else if (name.endsWith(".gif")) mimeType = "image/gif";
+  }
   if (!UPLOAD_MIME_TYPES[mimeType]) {
     return NextResponse.json({ error: "Unsupported file type" }, { status: 400 });
   }

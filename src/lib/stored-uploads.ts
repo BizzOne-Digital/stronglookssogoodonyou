@@ -47,6 +47,37 @@ export function sanitizeUploadFilename(filename: string): boolean {
   return /^[a-zA-Z0-9._-]+$/.test(filename);
 }
 
+/** Mongoose lean() / BSON may not return a real Node Buffer — normalize before serving. */
+export function bufferFromStoredUploadData(data: unknown): Buffer | null {
+  if (!data) return null;
+  if (Buffer.isBuffer(data)) return data;
+
+  if (
+    typeof data === "object" &&
+    "type" in data &&
+    (data as { type: string }).type === "Buffer" &&
+    "data" in data &&
+    Array.isArray((data as { data: unknown }).data)
+  ) {
+    return Buffer.from((data as { data: number[] }).data);
+  }
+
+  if (
+    typeof data === "object" &&
+    "_bsontype" in data &&
+    (data as { _bsontype: string })._bsontype === "Binary"
+  ) {
+    const bin = data as { buffer?: Uint8Array };
+    if (bin.buffer) return Buffer.from(bin.buffer);
+  }
+
+  if (data instanceof Uint8Array) {
+    return Buffer.from(data);
+  }
+
+  return null;
+}
+
 export async function deleteStoredUploadByUrl(url: string): Promise<boolean> {
   const parsed = parseManagedUploadUrl(url);
   if (!parsed) return false;

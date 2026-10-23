@@ -39,14 +39,22 @@ export function GalleryAdmin({ items }: { items: GalleryAdminItem[] }) {
         {list.map((item) => (
           <div key={item.id} className="rounded border bg-white p-3 text-sm">
             <div className="relative aspect-[4/5] overflow-hidden bg-black/5">
-              <Image
-                src={resolvePublicImageSrc(item.imageUrl)}
-                alt={item.alt}
-                fill
-                className="object-cover"
-                sizes="200px"
-                unoptimized={item.imageUrl.startsWith("/api/uploads/")}
-              />
+              {item.imageUrl.startsWith("/api/uploads/") ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={item.imageUrl}
+                  alt={item.alt}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <Image
+                  src={resolvePublicImageSrc(item.imageUrl)}
+                  alt={item.alt}
+                  fill
+                  className="object-cover"
+                  sizes="200px"
+                />
+              )}
             </div>
             <p className="mt-2 font-medium">{item.category}</p>
             <p className="text-black/60">{item.caption || item.alt}</p>

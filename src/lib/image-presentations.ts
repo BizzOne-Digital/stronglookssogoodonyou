@@ -93,3 +93,31 @@ export function galleryTilePresentation(img: TileImage) {
   }
   return base;
 }
+
+const HOME_TILE_ASPECT = "aspect-[3/4]";
+const HOME_TILE_HOVER =
+  "transition-transform duration-500 group-hover:scale-[1.03]";
+
+/** Home gallery rows — one shared tile height per row. */
+export function homeGalleryTilePresentation(img: TileImage) {
+  const frame = "overflow-hidden bg-power-black/5";
+
+  if (isEditorialPortraitTile(img)) {
+    return {
+      aspect: HOME_TILE_ASPECT,
+      frame,
+      image: `object-contain object-top ${HOME_TILE_HOVER}`,
+    };
+  }
+
+  const kind = img.presentation ?? categoryToPresentation(img.category);
+  const base = presentationClasses(kind);
+  const frameComp =
+    kind === "competition" ? "overflow-hidden bg-power-black" : frame;
+
+  return {
+    aspect: HOME_TILE_ASPECT,
+    frame: frameComp,
+    image: `${stripObjectPosition(base.image)} object-top ${HOME_TILE_HOVER}`,
+  };
+}

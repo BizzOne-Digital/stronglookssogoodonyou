@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
 import { prepareDb } from "@/lib/prepare-db";
 import { StoredUpload } from "@/models/StoredUpload";
-import { isUploadFolder, sanitizeUploadFilename } from "@/lib/stored-uploads";
+import {
+  bufferFromStoredUploadData,
+  isUploadFolder,
+  sanitizeUploadFilename,
+} from "@/lib/stored-uploads";
 
 export async function GET(
   _req: Request,
@@ -14,18 +18,24 @@ export async function GET(
   }
 
   await prepareDb();
-  const doc = await StoredUpload.findOne({ folder, filename }).lean();
+  const doc = await StoredUpload.findOne({ folder, filename })
+    .select("data mimeType size")
+    .lean();
   if (!doc?.data) {
     return new NextResponse("Not found", { status: 404 });
   }
 
-  const buf = Buffer.from(doc.data as unknown as Uint8Array);
+  const buf = bufferFromStoredUploadData(doc.data);
+  if (!buf?.length) {
+    return new NextResponse("Not found", { status: 404 });
+  }
+
   const body = new Uint8Array(buf);
 
   return new NextResponse(body, {
     status: 200,
     headers: {
-      "Content-Type": doc.mimeType,
+      "Content-Type": doc.mimeType || "application/octet-stream",
       "Content-Length": String(doc.size),
       "Cache-Control": "public, max-age=31536000, immutable",
     },

@@ -2,20 +2,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import type { PublicGalleryImage } from "@/lib/data/public";
-import { galleryTilePresentation } from "@/lib/image-presentations";
+import { homeGalleryTilePresentation } from "@/lib/image-presentations";
 
-function PreviewTile({
-  img,
-  competitionRow = false,
-}: {
-  img: PublicGalleryImage;
-  competitionRow?: boolean;
-}) {
-  const tileImg =
-    competitionRow && img.category === "Competition"
-      ? { ...img, presentation: "competition" as const }
-      : img;
-  const { aspect, frame, image } = galleryTilePresentation(tileImg);
+function PreviewTile({ img }: { img: PublicGalleryImage }) {
+  const { aspect, frame, image } = homeGalleryTilePresentation(img);
 
   return (
     <Link
@@ -72,7 +62,7 @@ export function HomeGalleryPreview({ images }: { images: PublicGalleryImage[] })
         {personal.length > 0 && (
           <div className="mt-12">
             <p className="font-display text-xs tracking-[0.35em] text-power-black/50">LIFE &amp; TRAINING</p>
-            <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+            <div className="mt-4 grid grid-cols-2 items-stretch gap-3 md:grid-cols-4 md:gap-4">
               {personal.map((img) => (
                 <PreviewTile key={img.id} img={img} />
               ))}
@@ -83,9 +73,9 @@ export function HomeGalleryPreview({ images }: { images: PublicGalleryImage[] })
         {competition.length > 0 && (
           <div className="mt-10">
             <p className="font-display text-xs tracking-[0.35em] text-power-black/50">COMPETITION</p>
-            <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 md:gap-4">
+            <div className="mt-4 grid grid-cols-1 items-stretch gap-3 sm:grid-cols-2 md:gap-4">
               {competition.map((img) => (
-                <PreviewTile key={img.id} img={img} competitionRow />
+                <PreviewTile key={img.id} img={img} />
               ))}
             </div>
           </div>

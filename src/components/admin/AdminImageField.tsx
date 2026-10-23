@@ -125,14 +125,22 @@ export function AdminImageField({
 
       {previewSrc ? (
         <div className="relative aspect-video max-w-sm overflow-hidden rounded border bg-black/5">
-          <Image
-            src={previewSrc}
-            alt=""
-            fill
-            className="object-cover"
-            sizes="320px"
-            unoptimized={previewSrc.startsWith("/api/uploads/")}
-          />
+          {previewSrc.startsWith("/api/uploads/") ? (
+            // eslint-disable-next-line @next/next/no-img-element -- admin preview of Mongo-backed bytes
+            <img
+              src={previewSrc}
+              alt=""
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <Image
+              src={previewSrc}
+              alt=""
+              fill
+              className="object-cover"
+              sizes="320px"
+            />
+          )}
         </div>
       ) : (
         <p className="text-sm text-black/50">No image selected.</p>

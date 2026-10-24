@@ -14,6 +14,7 @@ export function WorkoutVideo({
 }: Props) {
   const bg = dark ? "bg-power-black text-clean-white" : "bg-clean-white text-power-black";
   const leadColor = dark ? "text-soft-silver" : "text-power-black/75";
+  const clips = SITE_VIDEO.trainingClips;
 
   return (
     <section className={`${bg} py-16 md:py-24`}>
@@ -21,21 +22,28 @@ export function WorkoutVideo({
         <p className="font-display text-xs tracking-[0.4em] text-hot-fuchsia">TRAINING</p>
         <h2 className="mt-4 font-display text-3xl uppercase tracking-tight md:text-4xl">{title}</h2>
         <p className={`mt-4 max-w-2xl text-base leading-relaxed md:text-lg ${leadColor}`}>{lead}</p>
-        <div className="mt-10 overflow-hidden border border-hot-fuchsia/30 bg-power-black shadow-lg">
-          <video
-            className="aspect-video w-full object-cover"
-            controls
-            playsInline
-            preload="metadata"
-            poster={SITE_IMAGES.gymMatDumbbell}
-          >
-            <source src={SITE_VIDEO.workout} type="video/mp4" />
-            Your browser does not support embedded video. You can{" "}
-            <a href={SITE_VIDEO.workout} className="text-hot-fuchsia underline">
-              download the clip
-            </a>
-            .
-          </video>
+        <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2">
+          {clips.map((clip) => (
+            <div
+              key={clip.src}
+              className="overflow-hidden border border-hot-fuchsia/30 bg-power-black shadow-lg"
+            >
+              <video
+                className="aspect-video w-full object-cover"
+                controls
+                playsInline
+                preload="metadata"
+                poster={SITE_IMAGES.gymMatDumbbell}
+              >
+                <source src={clip.src} type={clip.mimeType} />
+                Your browser does not support embedded video.{" "}
+                <a href={clip.src} className="text-hot-fuchsia underline">Download clip</a>.
+              </video>
+              <p className="px-3 py-2 text-center text-xs uppercase tracking-widest text-soft-silver">
+                {clip.title}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
     </section>

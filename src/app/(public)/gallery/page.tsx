@@ -3,6 +3,7 @@ import { GalleryGrid } from "@/components/gallery/GalleryGrid";
 import { PageCta } from "@/components/ui/PageCta";
 import { getPublicGalleryImages } from "@/lib/data/public";
 import { STATIC_GALLERY_IMAGES } from "@/lib/gallery-static";
+import { TRAINING_GALLERY_VIDEOS } from "@/lib/gallery-training-videos";
 import { SITE_IMAGES } from "@/lib/site-images";
 import { WorkoutVideo } from "@/components/media/WorkoutVideo";
 
@@ -15,6 +16,8 @@ export default async function GalleryPage() {
   } catch {
     // static fallback
   }
+
+  const galleryItems = [...images, ...TRAINING_GALLERY_VIDEOS];
 
   return (
     <>
@@ -32,7 +35,7 @@ export default async function GalleryPage() {
       />
       <section className="bg-power-black py-16 text-clean-white md:py-20">
         <div className="mx-auto max-w-7xl px-4 md:px-8">
-          <GalleryGrid images={images} />
+          <GalleryGrid images={galleryItems} />
         </div>
       </section>
       <PageCta

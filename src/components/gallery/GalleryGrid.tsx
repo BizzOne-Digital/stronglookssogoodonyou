@@ -22,6 +22,8 @@ export type GalleryImage = {
   caption?: string;
   category: string;
   presentation?: PresentationKind;
+  mediaType?: "image" | "video";
+  videoMimeType?: string;
 };
 
 export function GalleryGrid({ images }: { images: GalleryImage[] }) {
@@ -87,6 +89,34 @@ export function GalleryGrid({ images }: { images: GalleryImage[] }) {
       <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {filtered.map((img, idx) => {
           const { aspect, frame, image } = galleryTilePresentation(img);
+
+          if (img.mediaType === "video") {
+            return (
+              <div
+                key={img.id}
+                className={`relative w-full ${aspect} ${frame}`}
+              >
+                <video
+                  className="h-full w-full object-cover"
+                  controls
+                  playsInline
+                  preload="metadata"
+                  aria-label={img.alt}
+                >
+                  <source
+                    src={img.src}
+                    type={img.videoMimeType ?? "video/quicktime"}
+                  />
+                </video>
+                {img.caption && (
+                  <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-power-black/80 to-transparent px-3 py-2 text-xs uppercase tracking-widest text-clean-white">
+                    {img.caption}
+                  </span>
+                )}
+              </div>
+            );
+          }
+
           return (
             <button
               key={img.id}

@@ -109,14 +109,6 @@ export const STATIC_GALLERY_IMAGES: GalleryImage[] = [
     presentation: "personal",
   },
   {
-    id: "static-05",
-    src: `${base}/05-training-batl.jpg`,
-    alt: "Joanna Michel at BATL axe throwing in training gear",
-    category: "Training",
-    caption: "Strength off the platform, BATL",
-    presentation: "personal",
-  },
-  {
     id: "static-08",
     src: `${base}/08-training-pool.jpg`,
     alt: "Joanna Michel poolside celebrating fitness lifestyle",
@@ -161,6 +153,7 @@ const GALLERY_PAGE_EXCLUDED_STATIC_IDS = new Set(["static-10", "static-13"]);
 const GALLERY_PAGE_EXCLUDED_FILENAMES = new Set([
   "10-competition-lineup.jpg",
   "13-competition-canfitpro-stage.jpg",
+  "05-training-batl.jpg",
   "09-training-studio.jpg",
   "lifestyle-studio-red.png",
   "lifestyle-gym-mirror.png",
@@ -201,14 +194,24 @@ export function lineupGalleryRank(src: string): number {
   return 3;
 }
 
-export function filterImagesForGalleryPage<T extends { id: string; src: string }>(
-  images: T[]
-): T[] {
-  return images.filter((img) => {
-    if (GALLERY_PAGE_EXCLUDED_STATIC_IDS.has(img.id)) return false;
-    const file = galleryImageFilename(img.src);
-    return !GALLERY_PAGE_EXCLUDED_FILENAMES.has(file);
-  });
+export function isExcludedGalleryImage(img: {
+  id: string;
+  src: string;
+  alt?: string;
+  caption?: string;
+}): boolean {
+  if (GALLERY_PAGE_EXCLUDED_STATIC_IDS.has(img.id)) return true;
+  const file = galleryImageFilename(img.src);
+  if (GALLERY_PAGE_EXCLUDED_FILENAMES.has(file)) return true;
+  const text = `${img.alt ?? ""} ${img.caption ?? ""}`.toLowerCase();
+  if (text.includes("batl")) return true;
+  return false;
+}
+
+export function filterImagesForGalleryPage<
+  T extends { id: string; src: string; alt?: string; caption?: string },
+>(images: T[]): T[] {
+  return images.filter((img) => !isExcludedGalleryImage(img));
 }
 
 export function sortGalleryImages<T extends { category: string; order?: number }>(

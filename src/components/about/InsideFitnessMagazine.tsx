@@ -35,18 +35,25 @@ export function InsideFitnessMagazine({ dark = false }: { dark?: boolean }) {
         </p>
 
         <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
-          {PRESS_TILES.map((img) => (
+          {PRESS_TILES.map((img) => {
+            const isCover = img.src === INSIDE_FITNESS_PRESS.cover.src;
+            const imageClass = isCover
+              ? "object-cover max-sm:object-left max-sm:object-top sm:object-left sm:object-top lg:object-center lg:object-top"
+              : "object-cover object-top";
+
+            return (
             <div key={img.src} className={TILE_CLASS}>
               <Image
                 src={img.src}
                 alt={img.alt}
                 fill
-                className="object-cover object-top"
+                className={imageClass}
                 sizes="(max-width:640px) 100vw, 33vw"
                 quality={90}
               />
             </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

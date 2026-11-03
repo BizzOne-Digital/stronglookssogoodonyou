@@ -2,7 +2,25 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   async redirects() {
-    return [{ source: "/favicon.ico", destination: "/favicon.jpg", permanent: true }];
+    const canonical = (
+      process.env.NEXT_PUBLIC_SITE_URL || "https://www.stronglooksgoodonyou.ca"
+    ).replace(/\/$/, "");
+
+    return [
+      { source: "/favicon.ico", destination: "/favicon.jpg", permanent: true },
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "stronglookssogoodonyou.vercel.app" }],
+        destination: `${canonical}/:path*`,
+        permanent: true,
+      },
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "stronglooksgoodonyou.ca" }],
+        destination: `${canonical}/:path*`,
+        permanent: true,
+      },
+    ];
   },
   serverExternalPackages: ["mongoose", "mongodb", "bcryptjs"],
   cacheComponents: true,

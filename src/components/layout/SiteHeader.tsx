@@ -14,6 +14,7 @@ import {
 const mobileNavLinks: MobileNavLink[] = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
+  { href: "/free-challenge", label: "Free 7-Day Challenge" },
   { href: "/services", label: "Coaching Packages" },
   { href: "/coaching-method", label: "Coaching Method" },
   { href: "/gallery", label: "Gallery" },
@@ -27,6 +28,7 @@ const heroNav = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
   { href: "/services", label: "Coaching" },
+  { href: "/free-challenge", label: "Free Challenge" },
   { href: "/gallery", label: "Gallery" },
   { href: "/contact", label: "Contact" },
 ];
@@ -41,6 +43,7 @@ const coachingLinks = [
 const innerNav = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
+  { href: "/free-challenge", label: "Free Challenge" },
   { href: "/gallery", label: "Gallery" },
   { href: "/contact", label: "Contact" },
 ];

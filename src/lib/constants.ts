@@ -34,5 +34,8 @@ export const PUBLIC_ROUTES = [
   "/apply",
   "/contact",
   "/team",
+  "/free-challenge",
+  "/28-day-program",
+  "/terms",
   "/privacy-policy",
 ] as const;

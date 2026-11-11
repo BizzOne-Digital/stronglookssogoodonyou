@@ -5,6 +5,15 @@ import { NextResponse } from "next/server";
 function skipIntroRedirect(pathname: string): boolean {
   if (pathname === "/intro") return true;
   if (pathname.startsWith("/admin")) return true;
+  // Campaign, checkout and legal pages must load directly (disclosure first, no intro detour).
+  if (
+    pathname.startsWith("/free-challenge") ||
+    pathname.startsWith("/28-day-program") ||
+    pathname === "/terms" ||
+    pathname === "/privacy-policy"
+  ) {
+    return true;
+  }
   if (pathname.startsWith("/api")) return true;
   if (pathname.startsWith("/_next")) return true;
   if (pathname === "/robots.txt" || pathname === "/sitemap.xml" || pathname === "/favicon.ico") {

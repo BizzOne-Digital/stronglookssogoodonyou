@@ -17,6 +17,8 @@ const actionLinks = [
   { href: "/booking", label: "Book a Consultation" },
   { href: "/contact", label: "Contact" },
   { href: "/team", label: "Our Team" },
+  { href: "/free-challenge", label: "Free 7-Day Challenge" },
+  { href: "/terms", label: "Digital Product Terms" },
   { href: "/privacy-policy", label: "Privacy Policy" },
 ];
 

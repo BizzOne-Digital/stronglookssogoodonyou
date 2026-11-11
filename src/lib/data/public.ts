@@ -15,7 +15,6 @@ import type { PresentationKind } from "@/lib/image-presentations";
 import {
   filterImagesForGalleryPage,
   galleryDedupeKey,
-  galleryImageFilename,
   getHomeCompetitionGalleryPreview,
   HOME_GALLERY_PREVIEW,
   lineupGalleryRank,

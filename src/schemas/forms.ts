@@ -30,6 +30,15 @@ export const applicationSchema = z.object({
   website: honeypot,
 });
 
+export const challengeSignupSchema = z.object({
+  firstName: z.string().trim().min(1).max(80),
+  email: z.string().trim().email().max(200),
+  disclaimerAccepted: z.literal(true),
+  marketingConsent: z.boolean().optional().default(false),
+  source: z.string().max(100).optional(),
+  website: honeypot,
+});
+
 export const bookingRequestSchema = z.object({
   name: z.string().min(2).max(120),
   email: z.string().email().max(200),

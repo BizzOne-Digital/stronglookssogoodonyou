@@ -7,6 +7,7 @@ const nav = [
   { href: "/admin/gallery", label: "Gallery" },
   { href: "/admin/testimonials", label: "Testimonials" },
   { href: "/admin/faqs", label: "FAQs" },
+  { href: "/admin/challenge", label: "Free Challenge" },
   { href: "/admin/settings", label: "Site Settings" },
 ];
 

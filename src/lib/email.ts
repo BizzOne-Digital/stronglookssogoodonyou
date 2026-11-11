@@ -57,6 +57,8 @@ export async function sendVisitorEmail(params: {
   to: string;
   subject: string;
   text: string;
+  html?: string;
+  replyTo?: string;
 }): Promise<SendMailResult> {
   const transport = getTransport();
   const from = process.env.SMTP_FROM || process.env.SMTP_USER;
@@ -69,8 +71,10 @@ export async function sendVisitorEmail(params: {
     const info = await transport.sendMail({
       from,
       to: params.to,
+      replyTo: params.replyTo ?? process.env.BUSINESS_EMAIL,
       subject: params.subject,
       text: params.text,
+      html: params.html,
     });
     return { ok: true, messageId: info.messageId };
   } catch (e) {

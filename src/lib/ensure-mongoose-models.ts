@@ -4,6 +4,9 @@
  */
 import "@/models/AdminAudit";
 import "@/models/AdminUser";
+import "@/models/AnalyticsEvent";
+import "@/models/ChallengeSubscriber";
+import "@/models/ProgramPurchase";
 import "@/models/Availability";
 import "@/models/Booking";
 import "@/models/CoachingApplication";

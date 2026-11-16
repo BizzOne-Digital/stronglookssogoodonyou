@@ -66,9 +66,9 @@ export const PROGRAM_28_INCLUDES = [
 ] as const;
 
 export const COACHING_OFFERS = [
-  { term: "3-month coaching", price: "$399" },
-  { term: "6-month coaching", price: "$599" },
-  { term: "12-month coaching", price: "$1,200" },
+  { term: "3-month coaching", price: "$750" },
+  { term: "6-month coaching", price: "$1,350" },
+  { term: "12-month coaching", price: "$2,400" },
 ] as const;
 
 export const TRACK_EVENTS = [

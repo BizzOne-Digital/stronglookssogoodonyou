@@ -46,7 +46,7 @@ export default async function PrivacyPage() {
             We will still send service emails about your registration or purchase.
           </p>
           <p>
-            Payments for paid programs are processed by Stripe. We receive your email address and confirmation of payment
+            Payments for paid programs are processed by PayPal (you can pay with PayPal or a Visa or Mastercard card). We receive your email address and confirmation of payment
             but do not see or store your card details.
           </p>
           <p>

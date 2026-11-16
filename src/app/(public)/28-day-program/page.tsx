@@ -8,6 +8,7 @@ export const metadata: Metadata = {
 };
 
 const MESSAGES: Record<string, string> = {
+  failed: "We could not complete your payment. Please try again, or contact us if you were charged.",
   unavailable: "Checkout is temporarily unavailable. Please try again shortly or contact us.",
   busy: "Too many attempts. Please wait a few minutes and try again.",
   cancelled: "Checkout was cancelled. No payment was taken.",

@@ -1,8 +1,7 @@
 import assert from "node:assert/strict";
-import { createHmac } from "node:crypto";
 import { describe, it } from "node:test";
 import { challengeSignupSchema } from "../src/schemas/forms";
-import { verifyStripeSignature } from "../src/lib/stripe";
+import { isOrderId, verifyCompletedOrder } from "../src/lib/paypal";
 
 const valid = { firstName: "Sam", email: "sam@example.com", disclaimerAccepted: true };
 
@@ -24,21 +23,36 @@ describe("challengeSignupSchema", () => {
   });
 });
 
-describe("verifyStripeSignature", () => {
-  const secret = "whsec_test";
-  const body = '{"a":1}';
-  const t = 1_700_000_000;
-  const sig = createHmac("sha256", secret).update(`${t}.${body}`).digest("hex");
-  const now = t * 1000;
+const expected = { customId: "28-day-body-sculpting-program", amountCents: 2999, currency: "cad" };
+const completed = {
+  id: "ORDER123456",
+  status: "COMPLETED",
+  payer: { email_address: "Buyer@Example.com" },
+  purchase_units: [
+    { payments: { captures: [{ status: "COMPLETED", custom_id: expected.customId, amount: { currency_code: "CAD", value: "29.99" } }] } },
+  ],
+};
 
-  it("accepts a valid signature", () => {
-    assert.equal(verifyStripeSignature(body, `t=${t},v1=${sig}`, secret, 300, now), true);
+describe("verifyCompletedOrder", () => {
+  it("accepts a completed payment for the right product and price", () => {
+    const p = verifyCompletedOrder(completed, expected);
+    assert.equal(p?.email, "buyer@example.com");
+    assert.equal(p?.orderId, "ORDER123456");
   });
-  it("rejects a tampered body", () => {
-    assert.equal(verifyStripeSignature('{"a":2}', `t=${t},v1=${sig}`, secret, 300, now), false);
+  it("rejects wrong amount, currency, product or status", () => {
+    const cap = completed.purchase_units[0].payments.captures[0];
+    const withCap = (c: object) => ({ ...completed, purchase_units: [{ payments: { captures: [{ ...cap, ...c }] } }] });
+    assert.equal(verifyCompletedOrder(withCap({ amount: { currency_code: "CAD", value: "1.00" } }), expected), null);
+    assert.equal(verifyCompletedOrder(withCap({ amount: { currency_code: "USD", value: "29.99" } }), expected), null);
+    assert.equal(verifyCompletedOrder(withCap({ custom_id: "other" }), expected), null);
+    assert.equal(verifyCompletedOrder({ ...completed, status: "APPROVED" }, expected), null);
   });
-  it("rejects an old timestamp and a missing header", () => {
-    assert.equal(verifyStripeSignature(body, `t=${t},v1=${sig}`, secret, 300, now + 3_600_000), false);
-    assert.equal(verifyStripeSignature(body, null, secret), false);
+});
+
+describe("isOrderId", () => {
+  it("only allows short alphanumeric ids", () => {
+    assert.equal(isOrderId("5O190127TN364715T"), true);
+    assert.equal(isOrderId("../etc/passwd"), false);
+    assert.equal(isOrderId(undefined), false);
   });
 });

@@ -1,15 +1,15 @@
 import { NextResponse } from "next/server";
 import { connectMongo } from "@/lib/mongodb";
-import { ChallengeSubscriber } from "@/models/ChallengeSubscriber";
 import { AnalyticsEvent } from "@/models/AnalyticsEvent";
 import { PROGRAM_28 } from "@/lib/challenge";
-import { createCheckoutSession, stripeConfigured } from "@/lib/stripe";
+import { createOrder, paypalConfigured } from "@/lib/paypal";
 import { checkRateLimit, rateLimitKey } from "@/lib/rate-limit";
-import { clientIp, isToken, siteUrl } from "@/lib/site-url";
+import { clientIp, siteUrl } from "@/lib/site-url";
 
 /**
- * Starts a secure Stripe Checkout for the 28-Day Program ($29.99 CAD).
- * Purchase is an explicit action here; it is never triggered by free registration.
+ * Starts secure PayPal checkout for the 28-Day Program ($29.99 CAD). Buyers can pay with PayPal
+ * or a Visa/Mastercard card. A purchase is an explicit action here; free registration never triggers it.
+ * The buyer is only charged when they return and we capture the order (see ./return).
  */
 export async function GET(req: Request) {
   const base = siteUrl();
@@ -17,30 +17,24 @@ export async function GET(req: Request) {
   if (!rl.allowed) {
     return NextResponse.redirect(`${base}/28-day-program?status=busy`, 303);
   }
-  if (!stripeConfigured()) {
+  if (!paypalConfigured()) {
+    return NextResponse.redirect(`${base}/28-day-program?status=unavailable`, 303);
+  }
+
+  const order = await createOrder({
+    amountCents: PROGRAM_28.priceCents,
+    currency: PROGRAM_28.currency,
+    description: PROGRAM_28.name,
+    customId: PROGRAM_28.slug,
+    brandName: "Joanna Michel Fitness",
+    returnUrl: `${base}/api/checkout/28-day/return`,
+    cancelUrl: `${base}/28-day-program?status=cancelled`,
+  });
+  if (!order.ok) {
     return NextResponse.redirect(`${base}/28-day-program?status=unavailable`, 303);
   }
 
   await connectMongo();
-  const token = new URL(req.url).searchParams.get("t");
-  let email: string | undefined;
-  if (isToken(token)) {
-    const sub = await ChallengeSubscriber.findOne({ accessToken: token }).select("email").lean();
-    email = sub?.email;
-  }
-
-  const session = await createCheckoutSession({
-    amountCents: PROGRAM_28.priceCents,
-    currency: PROGRAM_28.currency,
-    productName: PROGRAM_28.name,
-    successUrl: `${base}/28-day-program/success`,
-    cancelUrl: `${base}/28-day-program?status=cancelled`,
-    customerEmail: email,
-    metadata: { product: PROGRAM_28.slug },
-  });
-  if (!session.ok) {
-    return NextResponse.redirect(`${base}/28-day-program?status=unavailable`, 303);
-  }
   await AnalyticsEvent.create({ name: "checkout_started", path: "/api/checkout/28-day" }).catch(() => {});
-  return NextResponse.redirect(session.url, 303);
+  return NextResponse.redirect(order.approveUrl, 303);
 }

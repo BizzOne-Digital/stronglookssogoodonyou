@@ -2,7 +2,8 @@ import { registerModel } from "@/lib/register-model";
 import { Schema } from "mongoose";
 
 export interface IProgramPurchase {
-  stripeSessionId: string;
+  provider: string;
+  orderId: string;
   email: string;
   amountCents: number;
   currency: string;
@@ -13,7 +14,8 @@ export interface IProgramPurchase {
 
 const ProgramPurchaseSchema = new Schema<IProgramPurchase>(
   {
-    stripeSessionId: { type: String, required: true, unique: true, index: true },
+    provider: { type: String, required: true, default: "paypal" },
+    orderId: { type: String, required: true, unique: true, index: true },
     email: { type: String, required: true, lowercase: true, index: true },
     amountCents: { type: Number, required: true },
     currency: { type: String, required: true },

@@ -5,7 +5,7 @@ import { PROGRAM_28 } from "@/lib/challenge";
 import { isToken } from "@/lib/site-url";
 import { pdfResponse, readPrivatePdf } from "@/lib/private-files";
 
-/** Only available after a verified Stripe payment created a purchase record. */
+/** Only available after a verified PayPal payment created a purchase record. */
 export async function GET(req: Request) {
   const token = new URL(req.url).searchParams.get("t");
   if (!isToken(token)) {
